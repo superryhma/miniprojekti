@@ -1,4 +1,4 @@
-package com.github.erikoisryhma;
+package com.github.superryhma;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
