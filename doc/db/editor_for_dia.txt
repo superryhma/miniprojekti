@@ -1,0 +1,2 @@
+dia-bin 0.97.2
+https://wiki.gnome.org/Apps/Dia
