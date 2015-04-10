@@ -11,6 +11,9 @@ import javax.ws.rs.core.MediaType;
 @Path("references")
 @Produces(MediaType.APPLICATION_JSON)
 public class ReferencesResource {
+	
+	protected String path = "/api/references/";
+	
 	@GET
 	public String getReferences() {
 		return "";
