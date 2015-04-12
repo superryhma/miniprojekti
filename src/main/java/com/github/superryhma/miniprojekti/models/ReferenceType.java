@@ -1,5 +1,6 @@
-package models;
+package com.github.superryhma.miniprojekti.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -8,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class ReferenceType {
+public class ReferenceType implements Serializable {
 
 	@Id
 	@GeneratedValue

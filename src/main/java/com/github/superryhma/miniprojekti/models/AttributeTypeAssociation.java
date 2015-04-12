@@ -1,5 +1,6 @@
-package models;
+package com.github.superryhma.miniprojekti.models;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Dependency")
 @IdClass(AttributeTypeAssociationId.class)
-public class AttributeTypeAssociation {
+public class AttributeTypeAssociation implements Serializable {
 	
 	@Id
 	protected int reference_type;

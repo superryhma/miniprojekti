@@ -1,4 +1,4 @@
-package models;
+package com.github.superryhma.miniprojekti.models;
 
 import java.io.Serializable;
 
@@ -12,10 +12,12 @@ public class AttributeTypeAssociationId implements Serializable {
 	@Id
 	protected int attribute_type;
 
+        @Override
 	public int hashCode() {
 		return (int) (reference_type + attribute_type);
 	}
 
+        @Override
 	public boolean equals(Object object) {
 		if (object instanceof AttributeTypeAssociationId) {
 			AttributeTypeAssociationId otherId = (AttributeTypeAssociationId) object;

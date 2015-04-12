@@ -1,4 +1,4 @@
-package models;
+package com.github.superryhma.miniprojekti.models;
 
 import java.util.List;
 
