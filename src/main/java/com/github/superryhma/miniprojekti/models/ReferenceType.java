@@ -7,14 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-
+import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
 
 public class ReferenceType implements Serializable {
 
 
 	protected int id;
-	
+
 	protected String name;
 
 
@@ -36,10 +36,10 @@ public class ReferenceType implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-        
+
         public List<AttributeTypeAssociation> getAttributeTypes(){
             String query = "select * from Dependency where reference_type = ?";
-            
+
             List<AttributeTypeAssociation> types = new LinkedList<>();
             DBConnection dbc = new DBConnection();
 
@@ -56,23 +56,23 @@ public class ReferenceType implements Serializable {
                     type.attribute_type = result.getInt("attribute_type");
                     type.reference_type = this.id;
                     type.required = result.getBoolean("required");
-                    
+
                     types.add(type);
                 }
-                 
+
                 ps.close();
                 connection.close();
             } catch (SQLException ex) {
 
             }
-        
-            
+
+
             return types;
         }
-        
+
         public static List<ReferenceType> getReferenceTypes(){
             String query = "select * from Reference_type";
-            
+
             List<ReferenceType> types = new LinkedList<>();
             DBConnection dbc = new DBConnection();
 
@@ -93,11 +93,11 @@ public class ReferenceType implements Serializable {
             } catch (SQLException ex) {
 
             }
-        
-            
+
+
             return types;
         }
-        
+
         public static ReferenceType getById(int id){
             String query = "select * from Reference_type where id = ?";
 
@@ -124,10 +124,10 @@ public class ReferenceType implements Serializable {
                  connection.close();
              } catch (SQLException ex) {
 
-             } 
-             
+             }
+
              return type;
         }
 
-	
+
 }

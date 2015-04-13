@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
 
 public class AttributeType {
@@ -33,13 +34,13 @@ public class AttributeType {
 	}
 
 
-        
+
     public static AttributeType getById(int id){
         String query = "select * from Attribute_type where id = ?";
-        
+
         DBConnection dbc = new DBConnection();
         Connection connection = dbc.getConnection();
-        
+
         AttributeType type;
 
         try {
@@ -48,7 +49,7 @@ public class AttributeType {
             ps.setInt(1, id);
 
             ResultSet result = ps.executeQuery();
-        
+
             if(result.next()){
                 type = new AttributeType();
                 type.id = id;
@@ -59,10 +60,10 @@ public class AttributeType {
             ps.close();
             connection.close();
         } catch (SQLException ex) {
-            
+
         }
-        
-        
+
+
         return type;
-    }	
+    }
 }

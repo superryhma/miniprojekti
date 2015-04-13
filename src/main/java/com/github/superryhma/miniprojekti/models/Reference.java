@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
+import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
 
 public class Reference implements Serializable {
@@ -26,9 +26,9 @@ public class Reference implements Serializable {
     protected List<Attribute> fields;
 
     protected List<Tag> tags;
-    
+
     protected ReferenceType type;
-    
+
 
     public Reference() {
     }
@@ -81,16 +81,16 @@ public class Reference implements Serializable {
         this.tags = tags;
     }
 
-    
+
    private void loadTags(){
-        String query = "select * from Tag where reference = ?";        
-        
+        String query = "select * from Tag where reference = ?";
+
         DBConnection dbc = new DBConnection();
-        
+
         try {
             Connection connection = dbc.getConnection();
             PreparedStatement ps = connection.prepareStatement(query);
-        
+
             ps.setInt(1, id);
 
             ResultSet result = ps.executeQuery();
@@ -98,29 +98,29 @@ public class Reference implements Serializable {
 
             Reference reference;
             tags = new LinkedList<>();
-        
+
             while(result.next()){
                 Tag tag = new Tag();
                 tag.setId(result.getInt("id"));
                 tag.setReference(this);
                 tag.setValue(result.getString("value"));
-                
+
                 tags.add(tag);
             }
-            
+
             ps.close();
             connection.close();
         } catch (SQLException ex) {
-            
+
         }
-        
-    }    
-    
+
+    }
+
     private void loadAttributes(){
-        String query = "select * from Attribute where reference = ?";        
-        
+        String query = "select * from Attribute where reference = ?";
+
         DBConnection dbc = new DBConnection();
-        
+
         try {
             Connection connection = dbc.getConnection();
             PreparedStatement ps = connection.prepareStatement(query);
@@ -131,32 +131,32 @@ public class Reference implements Serializable {
 
             Reference reference;
             fields = new LinkedList<>();
-        
+
             while(result.next()){
                 Attribute attribute = new Attribute();
                 attribute.setId(result.getInt("id"));
                 attribute.setReference(this);
                 attribute.setValue(result.getString("value"));
                 attribute.setAttribute_type(AttributeType.getById(result.getInt("attribute_type")));
-                
+
                 fields.add(attribute);
             }
-        
+
             ps.close();
             connection.close();
         } catch (SQLException ex) {
-            
+
         }
     }
-    
 
-    
+
+
     public static Reference getById(int id){
         String query = "select * from Reference where id = ?";
-        
+
         DBConnection dbc = new DBConnection();
         Connection connection = dbc.getConnection();
-        
+
         Reference reference = null;
 
         try {
@@ -167,7 +167,7 @@ public class Reference implements Serializable {
             ResultSet result = ps.executeQuery();
 
 
-        
+
             if(result.next()){
                 reference = new Reference();
                 reference.id = id;
@@ -180,10 +180,10 @@ public class Reference implements Serializable {
             ps.close();
             connection.close();
         } catch (SQLException ex) {
-            
+
         }
-        
-        
+
+
         return reference;
     }
 }
