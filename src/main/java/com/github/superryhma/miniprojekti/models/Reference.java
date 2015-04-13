@@ -1,6 +1,5 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +11,10 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
+import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
 import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
-public class Reference implements Serializable {
+public class Reference implements ReferenceDAO {
 
 	protected int id;
 	protected String bibtexname;
@@ -26,67 +26,89 @@ public class Reference implements Serializable {
 
 	public Reference() {
 	}
+	
+	@Override
+	public List<Reference> getReferences() {
+		try {
+			String query = "select * from Reference";
 
-	public static Reference getById(int id) throws NamingException,
-			SQLException {
-		String query = "select * from Reference where id = ?";
+			DBConnection dbc = new DBConnection();
+			Connection connection = dbc.getConnection();
 
-		DBConnection dbc = new DBConnection();
-		Connection connection = dbc.getConnection();
+			List<Reference> references = new ArrayList<>();
 
-		Reference reference = null;
+			PreparedStatement ps = connection.prepareStatement(query);
 
-		PreparedStatement ps = connection.prepareStatement(query);
+			Reference reference = null;
 
-		ps.setInt(1, id);
+			ps.setInt(1, id);
 
-		ResultSet result = ps.executeQuery();
+			ResultSet rs = ps.executeQuery();
 
-		if (result.next()) {
-			reference = new Reference();
-			reference.id = id;
-			reference.loadAttributes();
-			reference.loadTags();
-			reference.type = ReferenceType.getById(result
-					.getInt("reference_type"));
-		} else {
-			reference = null;
+			while (rs.next()) {
+				reference = new Reference();
+				reference.id = id;
+				reference.loadAttributes();
+				reference.loadTags();
+				reference.type = ReferenceType.getById(rs
+						.getInt("reference_type"));
+				references.add(reference);
+			}
+
+			ps.close();
+			connection.close();
+
+			return references;
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		ps.close();
-		connection.close();
-
-		return reference;
+		return null;
 	}
 
-	public List<Reference> getAll() throws NamingException, SQLException {
-		String query = "select * from Reference";
+	@Override
+	public Reference getReferenceById(int id) {
+		try {
+			String query = "select * from Reference where id = ?";
 
-		DBConnection dbc = new DBConnection();
-		Connection connection = dbc.getConnection();
+			DBConnection dbc = new DBConnection();
+			Connection connection = dbc.getConnection();
 
-		ArrayList<Reference> references = new ArrayList<>();
+			Reference reference = null;
 
-		PreparedStatement ps = connection.prepareStatement(query);
+			PreparedStatement ps = connection.prepareStatement(query);
 
-		Reference reference = null;
+			ps.setInt(1, id);
 
-		ps.setInt(1, id);
+			ResultSet result = ps.executeQuery();
 
-		ResultSet rs = ps.executeQuery();
-		
-		while (rs.next()) {
-			reference = new Reference();
-			reference.id = id;
-			reference.loadAttributes();
-			reference.loadTags();
-			reference.type = ReferenceType.getById(rs.getInt("reference_type"));
-			references.add(reference);
+			if (result.next()) {
+				reference = new Reference();
+				reference.id = id;
+				reference.loadAttributes();
+				reference.loadTags();
+				reference.type = ReferenceType.getById(result
+						.getInt("reference_type"));
+			} else {
+				reference = null;
+			}
+			ps.close();
+			connection.close();
+
+			return reference;
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-
-		ps.close();
-		connection.close();
-
-		return references;
+		return null;
+	}
+	
+	@Override
+	public Reference addReference(Reference reference) {
+		//TEE LOOPPUUN
+		return null;
 	}
 
 	private void loadTags() throws NamingException {
@@ -102,7 +124,6 @@ public class Reference implements Serializable {
 
 			ResultSet result = ps.executeQuery();
 
-			Reference reference;
 			tags = new LinkedList<>();
 
 			while (result.next()) {
@@ -134,7 +155,6 @@ public class Reference implements Serializable {
 
 			ResultSet result = ps.executeQuery();
 
-			Reference reference;
 			fields = new LinkedList<>();
 
 			while (result.next()) {
