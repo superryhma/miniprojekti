@@ -1,38 +1,34 @@
 package com.github.superryhma.miniprojekti.models;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 
-@Entity
+
 public class Reference implements Serializable {
 
-    @Id
-    @GeneratedValue
+
     protected int id;
 
     protected String bibtexname;
 
-    @Column(name = "created_at")
     protected Date createdAt;
 
-    @Column(name = "updated_at")
     protected Date updatedAt;
 
-    @OneToMany(mappedBy = "reference")
     protected List<Attribute> fields;
 
-    @OneToMany(mappedBy = "reference")
     protected List<Tag> tags;
+    
+    protected ReferenceType type;
+    
 
     public Reference() {
     }
@@ -85,13 +81,109 @@ public class Reference implements Serializable {
         this.tags = tags;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date();
-    }
+    
+   private void loadTags(){
+        String query = "select * from Tag where reference = ?";        
+        
+        DBConnection dbc = new DBConnection();
+        
+        try {
+            Connection connection = dbc.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
+        
+            ps.setInt(1, id);
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
+            ResultSet result = ps.executeQuery();
+
+
+            Reference reference;
+            tags = new LinkedList<>();
+        
+            while(result.next()){
+                Tag tag = new Tag();
+                tag.setId(result.getInt("id"));
+                tag.setReference(this);
+                tag.setValue(result.getString("value"));
+                
+                tags.add(tag);
+            }
+            
+            ps.close();
+            connection.close();
+        } catch (SQLException ex) {
+            
+        }
+        
+    }    
+    
+    private void loadAttributes(){
+        String query = "select * from Attribute where reference = ?";        
+        
+        DBConnection dbc = new DBConnection();
+        
+        try {
+            Connection connection = dbc.getConnection();
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, id);
+
+            ResultSet result = ps.executeQuery();
+
+
+            Reference reference;
+            fields = new LinkedList<>();
+        
+            while(result.next()){
+                Attribute attribute = new Attribute();
+                attribute.setId(result.getInt("id"));
+                attribute.setReference(this);
+                attribute.setValue(result.getString("value"));
+                attribute.setAttribute_type(AttributeType.getById(result.getInt("attribute_type")));
+                
+                fields.add(attribute);
+            }
+        
+            ps.close();
+            connection.close();
+        } catch (SQLException ex) {
+            
+        }
+    }
+    
+
+    
+    public static Reference getById(int id){
+        String query = "select * from Reference where id = ?";
+        
+        DBConnection dbc = new DBConnection();
+        Connection connection = dbc.getConnection();
+        
+        Reference reference = null;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            ResultSet result = ps.executeQuery();
+
+
+        
+            if(result.next()){
+                reference = new Reference();
+                reference.id = id;
+                reference.loadAttributes();
+                reference.loadTags();
+                reference.type = ReferenceType.getById(result.getInt("reference_type"));
+            }else{
+                reference = null;
+            }
+            ps.close();
+            connection.close();
+        } catch (SQLException ex) {
+            
+        }
+        
+        
+        return reference;
     }
 }
