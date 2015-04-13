@@ -42,6 +42,6 @@ CREATE TABLE Attribute{
  
 CREATE TABLE Tag{
     id SERIAL PRIMARY KEY,
-    reference INTEGER REFERENCES Reference(id),
+    reference INTEGER REFERENCES Reference(id)
     value TEXT NOT NULL
 };
