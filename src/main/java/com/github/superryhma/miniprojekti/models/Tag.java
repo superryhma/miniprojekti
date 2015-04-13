@@ -8,15 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
 public class Tag implements Serializable {
 
-	@Id
-	@GeneratedValue
 	protected int id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reference")
 	protected Reference reference;
 	
 	protected String value;

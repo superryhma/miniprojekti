@@ -1,26 +1,15 @@
 package com.github.superryhma.miniprojekti.models;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-@Entity
+
 public class Attribute implements Serializable {
 
-	@Id
-	@GeneratedValue
+
 	protected int id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reference")
 	protected Reference reference;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "attribute_type")
 	protected AttributeType attribute_type;
 
 	protected String value;

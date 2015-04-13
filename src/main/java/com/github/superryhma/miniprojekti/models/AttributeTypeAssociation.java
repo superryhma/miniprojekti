@@ -1,31 +1,19 @@
 package com.github.superryhma.miniprojekti.models;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="Dependency")
-@IdClass(AttributeTypeAssociationId.class)
+
+
 public class AttributeTypeAssociation implements Serializable {
 	
-	@Id
 	protected int reference_type;
 	
-	@Id
 	protected int attribute_type;
 	
-	@Column(name="required")
 	protected Boolean required;
 	
-	@JoinColumn(name = "reference_type", updatable = false, insertable = false)
 	protected ReferenceType referenceType;
 	
-	@JoinColumn(name = "attribute_type", updatable = false, insertable = false)
 	protected AttributeType attributeType;
 
 	public AttributeTypeAssociation() {

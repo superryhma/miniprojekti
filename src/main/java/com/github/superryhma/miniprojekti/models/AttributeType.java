@@ -1,21 +1,17 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 public class AttributeType {
 
-	@Id
-	@GeneratedValue
 	protected int id;
 
 	protected String name;
 
-	@OneToMany(mappedBy = "attribute_type")
-	private List<AttributeTypeAssociation> referenceTypes;
 
 	public AttributeType() {
 	}
@@ -36,12 +32,37 @@ public class AttributeType {
 		this.name = name;
 	}
 
-	public List<AttributeTypeAssociation> getReferenceTypes() {
-		return referenceTypes;
-	}
 
-	public void setReferenceTypes(List<AttributeTypeAssociation> referenceTypes) {
-		this.referenceTypes = referenceTypes;
-	}
-	
+        
+    public static AttributeType getById(int id){
+        String query = "select * from Attribute_type where id = ?";
+        
+        DBConnection dbc = new DBConnection();
+        Connection connection = dbc.getConnection();
+        
+        AttributeType type;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+
+            ps.setInt(1, id);
+
+            ResultSet result = ps.executeQuery();
+        
+            if(result.next()){
+                type = new AttributeType();
+                type.id = id;
+                type.name = result.getString("name");
+            }else{
+                type = null;
+            }
+            ps.close();
+            connection.close();
+        } catch (SQLException ex) {
+            
+        }
+        
+        
+        return type;
+    }	
 }

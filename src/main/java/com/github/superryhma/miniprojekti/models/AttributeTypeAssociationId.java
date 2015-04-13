@@ -6,18 +6,14 @@ import javax.persistence.Id;
 
 public class AttributeTypeAssociationId implements Serializable {
 
-	@Id
 	protected int reference_type;
 
-	@Id
 	protected int attribute_type;
 
-        @Override
 	public int hashCode() {
 		return (int) (reference_type + attribute_type);
 	}
 
-        @Override
 	public boolean equals(Object object) {
 		if (object instanceof AttributeTypeAssociationId) {
 			AttributeTypeAssociationId otherId = (AttributeTypeAssociationId) object;
