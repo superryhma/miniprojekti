@@ -9,181 +9,198 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
+import javax.naming.NamingException;
+
+import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 
 public class Reference implements Serializable {
 
+	protected int id;
+	protected String bibtexname;
+	protected Date createdAt;
+	protected Date updatedAt;
+	protected List<Attribute> fields;
+	protected List<Tag> tags;
+	protected ReferenceType type;
 
-    protected int id;
+	public Reference() {
+	}
 
-    protected String bibtexname;
+	public static Reference getById(int id) throws NamingException,
+			SQLException {
+		String query = "select * from Reference where id = ?";
 
-    protected Date createdAt;
+		DBConnection dbc = new DBConnection();
+		Connection connection = dbc.getConnection();
 
-    protected Date updatedAt;
+		Reference reference = null;
 
-    protected List<Attribute> fields;
+		PreparedStatement ps = connection.prepareStatement(query);
 
-    protected List<Tag> tags;
+		ps.setInt(1, id);
 
-    protected ReferenceType type;
+		ResultSet result = ps.executeQuery();
 
+		if (result.next()) {
+			reference = new Reference();
+			reference.id = id;
+			reference.loadAttributes();
+			reference.loadTags();
+			reference.type = ReferenceType.getById(result
+					.getInt("reference_type"));
+		} else {
+			reference = null;
+		}
+		ps.close();
+		connection.close();
 
-    public Reference() {
-    }
+		return reference;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public List<Reference> getAll() throws NamingException, SQLException {
+		String query = "select * from Reference";
 
-    public void setId(int id) {
-        this.id = id;
-    }
+		DBConnection dbc = new DBConnection();
+		Connection connection = dbc.getConnection();
 
-    public String getName() {
-        return bibtexname;
-    }
+		ArrayList<Reference> references = new ArrayList<>();
 
-    public void setName(String name) {
-        this.bibtexname = name;
-    }
+		PreparedStatement ps = connection.prepareStatement(query);
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+		Reference reference = null;
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+		ps.setInt(1, id);
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
+		ResultSet rs = ps.executeQuery();
+		
+		while (rs.next()) {
+			reference = new Reference();
+			reference.id = id;
+			reference.loadAttributes();
+			reference.loadTags();
+			reference.type = ReferenceType.getById(rs.getInt("reference_type"));
+			references.add(reference);
+		}
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+		ps.close();
+		connection.close();
 
-    public List<Attribute> getFields() {
-        return fields;
-    }
+		return references;
+	}
 
-    public void setFields(ArrayList<Attribute> fields) {
-        this.fields = fields;
-    }
+	private void loadTags() throws NamingException {
+		String query = "select * from Tag where reference = ?";
 
-    public List<Tag> getTags() {
-        return tags;
-    }
+		DBConnection dbc = new DBConnection();
 
-    public void setTags(ArrayList<Tag> tags) {
-        this.tags = tags;
-    }
+		try {
+			Connection connection = dbc.getConnection();
+			PreparedStatement ps = connection.prepareStatement(query);
 
+			ps.setInt(1, id);
 
-   private void loadTags(){
-        String query = "select * from Tag where reference = ?";
+			ResultSet result = ps.executeQuery();
 
-        DBConnection dbc = new DBConnection();
+			Reference reference;
+			tags = new LinkedList<>();
 
-        try {
-            Connection connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query);
+			while (result.next()) {
+				Tag tag = new Tag();
+				tag.setId(result.getInt("id"));
+				tag.setReference(this);
+				tag.setValue(result.getString("value"));
 
-            ps.setInt(1, id);
+				tags.add(tag);
+			}
 
-            ResultSet result = ps.executeQuery();
+			ps.close();
+			connection.close();
+		} catch (SQLException ex) {
 
+		}
 
-            Reference reference;
-            tags = new LinkedList<>();
+	}
 
-            while(result.next()){
-                Tag tag = new Tag();
-                tag.setId(result.getInt("id"));
-                tag.setReference(this);
-                tag.setValue(result.getString("value"));
+	private void loadAttributes() throws NamingException {
+		String query = "select * from Attribute where reference = ?";
 
-                tags.add(tag);
-            }
+		DBConnection dbc = new DBConnection();
 
-            ps.close();
-            connection.close();
-        } catch (SQLException ex) {
+		try {
+			Connection connection = dbc.getConnection();
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, id);
 
-        }
+			ResultSet result = ps.executeQuery();
 
-    }
+			Reference reference;
+			fields = new LinkedList<>();
 
-    private void loadAttributes(){
-        String query = "select * from Attribute where reference = ?";
+			while (result.next()) {
+				Attribute attribute = new Attribute();
+				attribute.setId(result.getInt("id"));
+				attribute.setReference(this);
+				attribute.setValue(result.getString("value"));
+				attribute.setAttribute_type(AttributeType.getById(result
+						.getInt("attribute_type")));
 
-        DBConnection dbc = new DBConnection();
+				fields.add(attribute);
+			}
 
-        try {
-            Connection connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, id);
+			ps.close();
+			connection.close();
+		} catch (SQLException ex) {
 
-            ResultSet result = ps.executeQuery();
+		}
+	}
 
+	public int getId() {
+		return id;
+	}
 
-            Reference reference;
-            fields = new LinkedList<>();
+	public void setId(int id) {
+		this.id = id;
+	}
 
-            while(result.next()){
-                Attribute attribute = new Attribute();
-                attribute.setId(result.getInt("id"));
-                attribute.setReference(this);
-                attribute.setValue(result.getString("value"));
-                attribute.setAttribute_type(AttributeType.getById(result.getInt("attribute_type")));
+	public String getName() {
+		return bibtexname;
+	}
 
-                fields.add(attribute);
-            }
+	public void setName(String name) {
+		this.bibtexname = name;
+	}
 
-            ps.close();
-            connection.close();
-        } catch (SQLException ex) {
+	public Date getCreatedAt() {
+		return createdAt;
+	}
 
-        }
-    }
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
 
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
 
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
-    public static Reference getById(int id){
-        String query = "select * from Reference where id = ?";
+	public List<Attribute> getFields() {
+		return fields;
+	}
 
-        DBConnection dbc = new DBConnection();
-        Connection connection = dbc.getConnection();
+	public void setFields(ArrayList<Attribute> fields) {
+		this.fields = fields;
+	}
 
-        Reference reference = null;
+	public List<Tag> getTags() {
+		return tags;
+	}
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(query);
+	public void setTags(ArrayList<Tag> tags) {
+		this.tags = tags;
+	}
 
-            ps.setInt(1, id);
-
-            ResultSet result = ps.executeQuery();
-
-
-
-            if(result.next()){
-                reference = new Reference();
-                reference.id = id;
-                reference.loadAttributes();
-                reference.loadTags();
-                reference.type = ReferenceType.getById(result.getInt("reference_type"));
-            }else{
-                reference = null;
-            }
-            ps.close();
-            connection.close();
-        } catch (SQLException ex) {
-
-        }
-
-
-        return reference;
-    }
 }
