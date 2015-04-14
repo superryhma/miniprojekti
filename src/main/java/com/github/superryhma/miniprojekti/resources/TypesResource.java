@@ -16,7 +16,7 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 public class TypesResource {
 
-	private TypeDAO typeDAO = new TypeDAOInMemoryImpl();
+	private static TypeDAO typeDAO = new TypeDAOInMemoryImpl();
 	
 	@GET
 	public String getTypes() {
