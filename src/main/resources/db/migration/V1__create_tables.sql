@@ -1,4 +1,4 @@
-CREATE TABLE USER(
+CREATE TABLE Users(
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     digestive TEXT NOT NULL
@@ -7,7 +7,7 @@ CREATE TABLE USER(
 CREATE TABLE Project(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    owner INTEGER NOT NULL REFERENCES USER(id)
+    owner INTEGER NOT NULL REFERENCES Users(id)
 );
  
 CREATE TABLE Reference_type(

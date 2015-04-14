@@ -11,7 +11,7 @@ INSERT INTO Attribute_type (name) VALUES ('month');
 INSERT INTO Attribute_type (name) VALUES ('note');
 INSERT INTO Attribute_type (name) VALUES ('key');
 
-INSERT INTO User (username, digestive) VALUES ('miniprojectuser','digestive');
+INSERT INTO Users (username, digestive) VALUES ('miniprojectuser','digestive');
 INSERT INTO Project (name, owner) VALUES ('miniproject',1);
 
 INSERT INTO Dependency (reference_type, attribute_type, required) VALUES 
