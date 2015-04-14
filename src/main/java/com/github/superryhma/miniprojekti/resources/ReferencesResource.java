@@ -52,7 +52,7 @@ public class ReferencesResource {
     public String addReference(String reference) {
         Reference ref = new Reference();
         JSONObject jobj = new JSONObject(reference);
-        ref.setName(jobj.getString("name"));
+        ref.setBibtexname(jobj.getString("name"));
         return new JSONObject(referenceDAO.addReference(ref)).toString();
     }
 }
