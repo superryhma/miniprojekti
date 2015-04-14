@@ -14,7 +14,7 @@ public class ResponseBuilder {
         JSONObject jobj = new JSONObject();
         jobj.put("success", false);
         jobj.put("error", errorCode);
-        jobj.put("message", message);
+        jobj.put("description", message);
         return jobj;
     }
     public static JSONObject invalidReferenceField(String field) {
