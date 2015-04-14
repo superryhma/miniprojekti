@@ -6,8 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.naming.NamingException;
 
@@ -20,8 +21,8 @@ public class Reference implements ReferenceDAO {
 	protected String bibtexname;
 	protected Date createdAt;
 	protected Date updatedAt;
-	protected List<Attribute> fields;
-	protected List<Tag> tags;
+	protected Set<Attribute> attributes;
+	protected Set<Tag> tags;
 	protected ReferenceType type;
 
 	public Reference() {
@@ -148,7 +149,7 @@ public class Reference implements ReferenceDAO {
 
 			ResultSet result = ps.executeQuery();
 
-			tags = new LinkedList<>();
+			tags = new HashSet<>();
 
 			while (result.next()) {
 				Tag tag = new Tag();
@@ -202,7 +203,7 @@ public class Reference implements ReferenceDAO {
 
 			ResultSet result = ps.executeQuery();
 
-			fields = new LinkedList<>();
+			attributes = new HashSet<>();
 
 			while (result.next()) {
 				Attribute attribute = new Attribute();
@@ -212,7 +213,7 @@ public class Reference implements ReferenceDAO {
 				attribute.setAttribute_type(AttributeType.getById(result
 						.getInt("attribute_type")));
 
-				fields.add(attribute);
+				attributes.add(attribute);
 			}
 
 			ps.close();
@@ -230,7 +231,7 @@ public class Reference implements ReferenceDAO {
 			Connection c;
 			PreparedStatement ps;
 
-			for (Attribute attribute : fields) {
+			for (Attribute attribute : attributes) {
 				c = dbc.getConnection();
 				ps = c.prepareStatement(sql);
 
@@ -255,12 +256,12 @@ public class Reference implements ReferenceDAO {
 		this.id = id;
 	}
 
-	public String getName() {
+	public String getBibtexname() {
 		return bibtexname;
 	}
 
-	public void setName(String name) {
-		this.bibtexname = name;
+	public void setBibtexname(String bibtexname) {
+		this.bibtexname = bibtexname;
 	}
 
 	public Date getCreatedAt() {
@@ -279,19 +280,19 @@ public class Reference implements ReferenceDAO {
 		this.updatedAt = updatedAt;
 	}
 
-	public List<Attribute> getFields() {
-		return fields;
+	public Set<Attribute> getAttributes() {
+		return attributes;
 	}
 
-	public void setFields(ArrayList<Attribute> fields) {
-		this.fields = fields;
+	public void setAttributes(Set<Attribute> attributes) {
+		this.attributes = attributes;
 	}
 
-	public List<Tag> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(ArrayList<Tag> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
 
@@ -303,11 +304,4 @@ public class Reference implements ReferenceDAO {
 		this.type = type;
 	}
 
-	public String getBibtexname() {
-		return bibtexname;
-	}
-
-	public void setBibtexname(String bibtexname) {
-		this.bibtexname = bibtexname;
-	}
 }
