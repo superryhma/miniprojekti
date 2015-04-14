@@ -1,5 +1,6 @@
 package com.github.superryhma.miniprojekti.resources;
 
+import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.AttributeType;
 import com.github.superryhma.miniprojekti.models.Reference;
 import org.json.JSONArray;
@@ -51,7 +52,11 @@ public class ResponseBuilder {
         jobj.put("name", reference.getBibtexname());
         jobj.put("created_at", reference.getCreatedAt());
         jobj.put("type", reference.getType());
-        jobj.put("fields", reference.getAttributes());
+        JSONObject attrs = new JSONObject();
+        for(Attribute attr : reference.getAttributes()) {
+            attrs.put(attr.getAttributeType(), attr.getValue());
+        }
+        jobj.put("fields", attrs);
         jobj.put("tags", new ArrayList<>(reference.getTags()));
         return jobj;
     }
