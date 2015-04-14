@@ -26,7 +26,7 @@ public class Reference implements ReferenceDAO {
 
 	public Reference() {
 	}
-	
+
 	@Override
 	public List<Reference> getReferences() {
 		try {
@@ -104,11 +104,35 @@ public class Reference implements ReferenceDAO {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Reference addReference(Reference reference) {
-		//TEE LOOPPUUN
-		return null;
+		try {
+			reference.saveAttributes();
+			reference.saveTags();
+
+			String sql = "INSERT INTO Reference (reference_type, project, bibtexname) \n"
+					+ "VALUES (?,?,?)";
+
+			DBConnection dbc = new DBConnection();
+			Connection c = dbc.getConnection();
+			PreparedStatement ps = c.prepareStatement(sql);
+
+			ps.setInt(1, reference.getType().id);
+			ps.setInt(2, 1);
+			ps.setString(3, this.getBibtexname());
+
+			ps.execute();
+
+			ps.close();
+			c.close();
+		} catch (NamingException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return reference;
 	}
 
 	private void loadTags() throws NamingException {
@@ -140,7 +164,30 @@ public class Reference implements ReferenceDAO {
 		} catch (SQLException ex) {
 
 		}
+	}
 
+	private void saveTags() throws NamingException {
+		try {
+			String sql = "INSERT INTO Tag (reference, value) \n"
+					+ "VALUES (?,?)";
+			DBConnection dbc = new DBConnection();
+			Connection c;
+			PreparedStatement ps;
+
+			for (Tag tag : tags) {
+				c = dbc.getConnection();
+				ps = c.prepareStatement(sql);
+
+				ps.setInt(1, tag.getReference().getId());
+				ps.setString(2, tag.getValue());
+
+				ps.execute();
+				ps.close();
+				c.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void loadAttributes() throws NamingException {
@@ -172,6 +219,31 @@ public class Reference implements ReferenceDAO {
 			connection.close();
 		} catch (SQLException ex) {
 
+		}
+	}
+
+	private void saveAttributes() throws NamingException {
+		try {
+			String sql = "INSERT INTO Attribute (reference, attribute_type, value) \n"
+					+ "VALUES (?,?,?)";
+			DBConnection dbc = new DBConnection();
+			Connection c;
+			PreparedStatement ps;
+
+			for (Attribute attribute : fields) {
+				c = dbc.getConnection();
+				ps = c.prepareStatement(sql);
+
+				ps.setInt(1, attribute.getReference().getId());
+				ps.setInt(2, attribute.getAttribute_type().getId());
+				ps.setString(3, attribute.getValue());
+
+				ps.execute();
+				ps.close();
+				c.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -223,4 +295,19 @@ public class Reference implements ReferenceDAO {
 		this.tags = tags;
 	}
 
+	public ReferenceType getType() {
+		return type;
+	}
+
+	public void setType(ReferenceType type) {
+		this.type = type;
+	}
+
+	public String getBibtexname() {
+		return bibtexname;
+	}
+
+	public void setBibtexname(String bibtexname) {
+		this.bibtexname = bibtexname;
+	}
 }
