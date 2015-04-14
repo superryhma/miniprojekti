@@ -1,6 +1,6 @@
 package com.github.superryhma.miniprojekti.dao.impl;
 
-import com.github.superryhma.miniprojekti.dao.TypeDAO;
+import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
 import com.github.superryhma.miniprojekti.models.AttributeType;
 
 import java.util.Arrays;
@@ -9,11 +9,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class TypeDAOInMemoryImpl implements TypeDAO {
+public class ReferenceTypeDAOInMemoryImpl implements ReferenceTypeDAO {
     private final Map<String, Set<String>> requiredTypes;
     private final Map<String, Set<String>> optionalTypes;
 
-    public TypeDAOInMemoryImpl() {
+    public ReferenceTypeDAOInMemoryImpl() {
         requiredTypes = new HashMap<>();
         optionalTypes = new HashMap<>();
         requiredTypes.put("article", new HashSet<>(Arrays.asList(

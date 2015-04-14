@@ -51,4 +51,14 @@ public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
         return reference;
     }
 
+    @Override
+    public Reference updateReference(int id, Reference reference) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteReference(int id) {
+        return false;
+    }
+
 }

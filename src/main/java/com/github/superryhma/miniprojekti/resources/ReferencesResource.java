@@ -1,9 +1,9 @@
 package com.github.superryhma.miniprojekti.resources;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
-import com.github.superryhma.miniprojekti.dao.TypeDAO;
+import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
 import com.github.superryhma.miniprojekti.dao.impl.ReferenceDAOInMemoryImpl;
-import com.github.superryhma.miniprojekti.dao.impl.TypeDAOInMemoryImpl;
+import com.github.superryhma.miniprojekti.dao.impl.ReferenceTypeDAOInMemoryImpl;
 import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
 import org.json.JSONArray;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class ReferencesResource {
 
     private static ReferenceDAO referenceDAO = new ReferenceDAOInMemoryImpl();
-    private static TypeDAO typeDAO = new TypeDAOInMemoryImpl();
+    private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAOInMemoryImpl();
     protected String path = "/api/references/";
     
     @GET
@@ -45,8 +45,8 @@ public class ReferencesResource {
         JSONObject jobj = new JSONObject(reference);
         JSONObject jfields = jobj.getJSONObject("fields");
         Set<Attribute> attr = new HashSet<>();
-        Set<String> requiredAttributes = new HashSet<>(typeDAO.getRequiredFields(jobj.getString("type")));
-        Set<String> allAttributes = new HashSet<>(typeDAO.getOptionalFields(jobj.getString("type")));
+        Set<String> requiredAttributes = new HashSet<>(referenceTypeDAO.getRequiredFields(jobj.getString("type")));
+        Set<String> allAttributes = new HashSet<>(referenceTypeDAO.getOptionalFields(jobj.getString("type")));
         allAttributes.addAll(requiredAttributes);
         for(String key : jfields.keySet()) {
             if(requiredAttributes.contains(key)) {

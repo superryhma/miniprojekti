@@ -4,7 +4,7 @@ import com.github.superryhma.miniprojekti.models.AttributeType;
 
 import java.util.Set;
 
-public interface TypeDAO {
+public interface ReferenceTypeDAO {
     Set<String> getRequiredFields(String type);
     Set<String> getOptionalFields(String type);
     Set<AttributeType> getTypes();

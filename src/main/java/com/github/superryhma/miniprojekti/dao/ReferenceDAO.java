@@ -7,4 +7,6 @@ public interface ReferenceDAO {
     List<Reference> getReferences();
     Reference getReferenceById(int id);
     Reference addReference(Reference reference);
+    Reference updateReference(int id, Reference reference);
+    boolean deleteReference(int id);
 }
