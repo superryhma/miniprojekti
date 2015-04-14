@@ -21,9 +21,10 @@ CREATE TABLE Attribute_type(
 );
  
 CREATE TABLE Dependency(
-    reference_type INTEGER PRIMARY KEY REFERENCES Reference_type(id),
-    attribute_type INTEGER PRIMARY KEY REFERENCES Attribute_type(id),
-    required BOOLEAN NOT NULL DEFAULT FALSE
+    reference_type INTEGER REFERENCES Reference_type(id),
+    attribute_type INTEGER REFERENCES Attribute_type(id),
+    required BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (reference_type, attribute_type)
 );
  
 CREATE TABLE Reference(
