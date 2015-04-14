@@ -10,17 +10,15 @@ import java.util.List;
 import java.util.Set;
 
 public class ResponseBuilder {
-    private static JSONObject failureObject(String message) {
+    private static JSONObject failureObject(int errorCode, String message) {
         JSONObject jobj = new JSONObject();
         jobj.put("success", false);
-        jobj.put("error", message);
+        jobj.put("error", errorCode);
+        jobj.put("message", message);
         return jobj;
     }
     public static JSONObject invalidReferenceField(String field) {
-        return failureObject("Invalid field '" + field + "'");
-    }
-    public static JSONObject duplicateReferenceField(String field) {
-        return failureObject("Duplicate field '" + field + "'");
+        return failureObject(400, "Invalid field '" + field + "'");
     }
     public static JSONObject missingField(Set<String> fields) {
         if(fields.size() > 1) {
@@ -30,12 +28,12 @@ public class ResponseBuilder {
                 str += ", '" + fieldlist.get(i) + "'";
             }
             str += " and '" + fieldlist.get(fieldlist.size()-1) + "'";
-            return failureObject("Missing fields " + str);
+            return failureObject(400, "Missing fields " + str);
         }
-        return failureObject("Missing field '" + fields.iterator().next() + "'");
+        return failureObject(400, "Missing field '" + fields.iterator().next() + "'");
     }
     public static JSONObject referenceNotFound() {
-        return failureObject("Reference not found");
+        return failureObject(400, "Reference not found");
     }
     private static JSONObject successObject() {
         JSONObject jobj = new JSONObject();
