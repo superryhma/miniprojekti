@@ -1,40 +1,26 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
+public class Reference {
 
-@Entity
-public class Reference implements Serializable {
+    private int id;
+    private String type;
+    private String bibtexname;
+    private Date createdAt;
+    private Date updatedAt;
+    private Set<Attribute> attributes;
+    private Set<String> tags;
 
-    @Id
-    @GeneratedValue
-    protected int id;
-
-    protected String bibtexname;
-
-    @Column(name = "created_at")
-    protected Date createdAt;
-
-    @Column(name = "updated_at")
-    protected Date updatedAt;
-
-    @OneToMany(mappedBy = "reference")
-    protected List<Attribute> fields;
-
-    @OneToMany(mappedBy = "reference")
-    protected List<Tag> tags;
-
-    public Reference() {
+    public Reference(String type, String bibtexname, Date createdAt, Date updatedAt, Set<Attribute> attributes, Set<String> tags) {
+        this.type = type;
+        this.bibtexname = bibtexname;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.attributes = attributes;
+        this.tags = tags;
     }
 
     public int getId() {
@@ -45,12 +31,20 @@ public class Reference implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getBibtexname() {
         return bibtexname;
     }
 
-    public void setName(String name) {
-        this.bibtexname = name;
+    public void setBibtexname(String bibtexname) {
+        this.bibtexname = bibtexname;
     }
 
     public Date getCreatedAt() {
@@ -69,29 +63,19 @@ public class Reference implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public List<Attribute> getFields() {
-        return fields;
+    public Set<Attribute> getAttributes() {
+        return attributes;
     }
 
-    public void setFields(ArrayList<Attribute> fields) {
-        this.fields = fields;
+    public void setAttributes(Set<Attribute> attributes) {
+        this.attributes = attributes;
     }
 
-    public List<Tag> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<Tag> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = new Date();
     }
 }

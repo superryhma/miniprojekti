@@ -1,55 +1,21 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+public class Attribute {
 
-@Entity
-public class Attribute implements Serializable {
+	private String attributeType;
+	private String value;
 
-	@Id
-	@GeneratedValue
-	protected int id;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "reference")
-	protected Reference reference;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "attribute_type")
-	protected AttributeType attribute_type;
-
-	protected String value;
-
-	public Attribute() {
+	public Attribute(String attributeType, String value) {
+		this.attributeType = attributeType;
+		this.value = value;
 	}
 
-	public int getId() {
-		return id;
+	public String getAttributeType() {
+		return attributeType;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public Reference getReference() {
-		return reference;
-	}
-
-	public void setReference(Reference reference) {
-		this.reference = reference;
-	}
-
-	public AttributeType getAttribute_type() {
-		return attribute_type;
-	}
-
-	public void setAttribute_type(AttributeType attribute_type) {
-		this.attribute_type = attribute_type;
+	public void setAttributeType(String attributeType) {
+		this.attributeType = attributeType;
 	}
 
 	public String getValue() {
@@ -59,5 +25,20 @@ public class Attribute implements Serializable {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Attribute attribute = (Attribute) o;
+
+		return !(attributeType != null ? !attributeType.equals(attribute.attributeType) : attribute.attributeType != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return attributeType != null ? attributeType.hashCode() : 0;
+	}
 }

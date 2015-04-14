@@ -1,47 +1,55 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.util.List;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.Set;
 
 public class AttributeType {
+    private String type;
+    private Set<String> requiredAttributes;
+    private Set<String> optionalAttributes;
 
-	@Id
-	@GeneratedValue
-	protected int id;
+    public AttributeType(String type, Set<String> requiredAttributes, Set<String> optionalAttributes) {
+        this.type = type;
+        this.requiredAttributes = requiredAttributes;
+        this.optionalAttributes = optionalAttributes;
+    }
 
-	protected String name;
+    public String getType() {
+        return type;
+    }
 
-	@OneToMany(mappedBy = "attribute_type")
-	private List<AttributeTypeAssociation> referenceTypes;
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public AttributeType() {
-	}
+    public Set<String> getRequiredAttributes() {
+        return requiredAttributes;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public void setRequiredAttributes(Set<String> requiredAttributes) {
+        this.requiredAttributes = requiredAttributes;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public Set<String> getOptionalAttributes() {
+        return optionalAttributes;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setOptionalAttributes(Set<String> optionalAttributes) {
+        this.optionalAttributes = optionalAttributes;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	public List<AttributeTypeAssociation> getReferenceTypes() {
-		return referenceTypes;
-	}
+        AttributeType that = (AttributeType) o;
 
-	public void setReferenceTypes(List<AttributeTypeAssociation> referenceTypes) {
-		this.referenceTypes = referenceTypes;
-	}
-	
+        return !(type != null ? !type.equals(that.type) : that.type != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return type != null ? type.hashCode() : 0;
+    }
 }

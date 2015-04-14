@@ -1,58 +1,71 @@
 package com.github.superryhma.miniprojekti.resources;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
+import com.github.superryhma.miniprojekti.dao.TypeDAO;
 import com.github.superryhma.miniprojekti.dao.impl.ReferenceDAOInMemoryImpl;
+import com.github.superryhma.miniprojekti.dao.impl.TypeDAOInMemoryImpl;
+import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
-import com.github.superryhma.miniprojekti.models.Tag;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.sql.Date;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("references")
 @Produces(MediaType.APPLICATION_JSON)
 public class ReferencesResource {
 
-    private final static ReferenceDAO referenceDAO = new ReferenceDAOInMemoryImpl();
+    private static ReferenceDAO referenceDAO = new ReferenceDAOInMemoryImpl();
+    private static TypeDAO typeDAO = new TypeDAOInMemoryImpl();
     protected String path = "/api/references/";
     
     @GET
     public String getReferences() throws Exception {
-        JSONArray jobj = new JSONArray();
-        for(Reference ref : referenceDAO.getReferences())
-            jobj.put(new JSONObject(ref));
-        return jobj.toString();
+        return ResponseBuilder.successGetReferences(referenceDAO.getReferences()).toString();
     }
 
     @GET
     @Path("/{id}")
     public String getReferenceById(@PathParam("id") int id) {
         Reference ref = referenceDAO.getReferenceById(id);
-        JSONObject jobj;
         if(ref != null)
-            jobj = new JSONObject(ref);
-        else
-            jobj = new JSONObject(JSONObject.NULL);
-        return jobj.toString();
+            return ResponseBuilder.successGetReferenceById(ref).toString();
+        return ResponseBuilder.referenceNotFound().toString();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String addReference(String reference) {
-        Reference ref = new Reference();
         JSONObject jobj = new JSONObject(reference);
-        ref.setName(jobj.getString("name"));
-        return new JSONObject(referenceDAO.addReference(ref)).toString();
+        JSONObject jfields = jobj.getJSONObject("fields");
+        Set<Attribute> attr = new HashSet<>();
+        Set<String> requiredAttributes = new HashSet<>(typeDAO.getRequiredFields(jobj.getString("type")));
+        Set<String> allAttributes = new HashSet<>(typeDAO.getOptionalFields(jobj.getString("type")));
+        allAttributes.addAll(requiredAttributes);
+        for(String key : jfields.keySet()) {
+            if(requiredAttributes.contains(key)) {
+                requiredAttributes.remove(key);
+            }
+            if(!allAttributes.contains(key)) {
+                return ResponseBuilder.invalidReferenceField(key).toString();
+            }
+            allAttributes.remove(key);
+            attr.add(new Attribute(key, jfields.getString(key)));
+        }
+        if(requiredAttributes.size() > 0) {
+            return ResponseBuilder.missingField(requiredAttributes).toString();
+        }
+        Set<String> tags = new HashSet<>();
+        JSONArray arr = jobj.getJSONArray("tags");
+        for(int i = 0; i < arr.length(); i++) {
+            tags.add(arr.getString(i));
+        }
+        Reference ref = new Reference(jobj.getString("type"), jobj.getString("name"), Date.from(Instant.now()), null, attr, tags);
+        return ResponseBuilder.successAddReference(referenceDAO.addReference(ref)).toString();
     }
 }
