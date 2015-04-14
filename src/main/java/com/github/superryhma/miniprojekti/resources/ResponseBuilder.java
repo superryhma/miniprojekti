@@ -6,6 +6,7 @@ import com.github.superryhma.miniprojekti.models.Reference;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,10 +19,12 @@ public class ResponseBuilder {
         jobj.put("description", message);
         return jobj;
     }
-    public static JSONObject invalidReferenceField(String field) {
-        return failureObject(400, "Invalid field '" + field + "'");
+    public static Response invalidReferenceField(String field) {
+        return Response.status(400)
+                .entity(failureObject(400, "Invalid field '" + field + "'").toString())
+                .build();
     }
-    public static JSONObject missingField(Set<String> fields) {
+    public static Response missingField(Set<String> fields) {
         if(fields.size() > 1) {
             List<String> fieldlist = new ArrayList<>(fields);
             String str = "'" + fieldlist.get(0) + "'";
@@ -29,24 +32,32 @@ public class ResponseBuilder {
                 str += ", '" + fieldlist.get(i) + "'";
             }
             str += " and '" + fieldlist.get(fieldlist.size()-1) + "'";
-            return failureObject(400, "Missing fields " + str);
+            return Response.status(400)
+                    .entity(failureObject(400, "Missing fields " + str).toString())
+                    .build();
         }
-        return failureObject(400, "Missing field '" + fields.iterator().next() + "'");
+        return Response.status(400)
+                .entity(failureObject(400, "Missing field '" + fields.iterator().next() + "'").toString())
+                .build();
     }
-    public static JSONObject referenceNotFound() {
-        return failureObject(404, "Reference not found");
+    public static Response referenceNotFound() {
+        return Response.status(404)
+                .entity(failureObject(404, "Reference not found").toString())
+                .build();
     }
     private static JSONObject successObject() {
         JSONObject jobj = new JSONObject();
         jobj.put("success", true);
         return jobj;
     }
-    public static JSONObject successAddReference(Reference reference) {
+    public static Response successAddReference(Reference reference) {
         JSONObject jobj = successObject();
         jobj.put("id", reference.getId());
-        return jobj;
+        return Response.status(200)
+                .entity(jobj.toString())
+                .build();
     }
-    public static JSONObject successGetReferenceById(Reference reference) {
+    private static JSONObject referenceToJSON(Reference reference) {
         JSONObject jobj = new JSONObject();
         jobj.put("id", reference.getId());
         jobj.put("name", reference.getBibtexname());
@@ -60,16 +71,23 @@ public class ResponseBuilder {
         jobj.put("tags", new ArrayList<>(reference.getTags()));
         return jobj;
     }
-    public static JSONObject successGetReferences(List<Reference> references) {
+    public static Response successGetReferenceById(Reference reference) {
+        return Response.status(200)
+                .entity(referenceToJSON(reference))
+                .build();
+    }
+    public static Response successGetReferences(List<Reference> references) {
         JSONObject jobj = successObject();
         JSONArray jarr = new JSONArray();
         for(Reference ref : references) {
-            jarr.put(successGetReferenceById(ref));
+            jarr.put(referenceToJSON(ref));
         }
         jobj.put("references", jarr);
-        return jobj;
+        return Response.status(200)
+                .entity(jobj.toString())
+                .build();
     }
-    public static JSONObject getAPITypes(Set<AttributeType> attributeTypes) {
+    public static Response getAPITypes(Set<AttributeType> attributeTypes) {
         JSONObject jobj = successObject();
         JSONArray jarr = new JSONArray();
         for(AttributeType at : attributeTypes) {
@@ -80,6 +98,8 @@ public class ResponseBuilder {
             jarr.put(j);
         }
         jobj.put("types", jarr);
-        return jobj;
+        return Response.status(200)
+                .entity(jobj.toString())
+                .build();
     }
 }

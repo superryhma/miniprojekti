@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.HashSet;
@@ -25,22 +26,22 @@ public class ReferencesResource {
     protected String path = "/api/references/";
     
     @GET
-    public String getReferences() throws Exception {
-        return ResponseBuilder.successGetReferences(referenceDAO.getReferences()).toString();
+    public Response getReferences() throws Exception {
+        return ResponseBuilder.successGetReferences(referenceDAO.getReferences());
     }
 
     @GET
     @Path("/{id}")
-    public String getReferenceById(@PathParam("id") int id) {
+    public Response getReferenceById(@PathParam("id") int id) {
         Reference ref = referenceDAO.getReferenceById(id);
         if(ref != null)
-            return ResponseBuilder.successGetReferenceById(ref).toString();
-        return ResponseBuilder.referenceNotFound().toString();
+            return ResponseBuilder.successGetReferenceById(ref);
+        return ResponseBuilder.referenceNotFound();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addReference(String reference) {
+    public Response addReference(String reference) {
         JSONObject jobj = new JSONObject(reference);
         JSONObject jfields = jobj.getJSONObject("fields");
         Set<Attribute> attr = new HashSet<>();
@@ -52,13 +53,13 @@ public class ReferencesResource {
                 requiredAttributes.remove(key);
             }
             if(!allAttributes.contains(key)) {
-                return ResponseBuilder.invalidReferenceField(key).toString();
+                return ResponseBuilder.invalidReferenceField(key);
             }
             allAttributes.remove(key);
             attr.add(new Attribute(key, jfields.getString(key)));
         }
         if(requiredAttributes.size() > 0) {
-            return ResponseBuilder.missingField(requiredAttributes).toString();
+            return ResponseBuilder.missingField(requiredAttributes);
         }
         Set<String> tags = new HashSet<>();
         JSONArray arr = jobj.getJSONArray("tags");
@@ -66,6 +67,6 @@ public class ReferencesResource {
             tags.add(arr.getString(i));
         }
         Reference ref = new Reference(jobj.getString("type"), jobj.getString("name"), Date.from(Instant.now()), null, attr, tags);
-        return ResponseBuilder.successAddReference(referenceDAO.addReference(ref)).toString();
+        return ResponseBuilder.successAddReference(referenceDAO.addReference(ref));
     }
 }
