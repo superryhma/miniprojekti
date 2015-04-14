@@ -61,7 +61,7 @@ public class ResponseBuilder {
         for(Reference ref : references) {
             jarr.put(successGetReferenceById(ref));
         }
-        jobj.put("reference", jarr);
+        jobj.put("references", jarr);
         return jobj;
     }
     public static JSONObject getAPITypes(Set<AttributeType> attributeTypes) {
