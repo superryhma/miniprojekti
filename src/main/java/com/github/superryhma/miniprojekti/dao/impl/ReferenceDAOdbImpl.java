@@ -272,4 +272,16 @@ public class ReferenceDAOdbImpl implements ReferenceDAO {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public Reference updateReference(int id, Reference reference) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean deleteReference(int id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

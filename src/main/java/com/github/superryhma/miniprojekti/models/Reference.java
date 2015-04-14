@@ -18,6 +18,15 @@ public class Reference {
 	public Reference() {
 	}
 	
+	public Reference(ReferenceType type, String bibtexname, Date createdAt, Date updatedAt, Set<Attribute> attributes, Set<Tag> tags) {
+        this.type = type;
+        this.bibtexname = bibtexname;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.attributes = attributes;
+        this.tags = tags;
+    }
+	
 	public int getId() {
 		return id;
 	}

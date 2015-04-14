@@ -13,7 +13,9 @@ import java.util.List;
  * @author jgke
  */
 public interface ReferenceDAO {
-    public List<Reference> getReferences();
-    public Reference getReferenceById(int id);
-    public Reference addReference(Reference reference);
+    List<Reference> getReferences();
+    Reference getReferenceById(int id);
+    Reference addReference(Reference reference);
+    Reference updateReference(int id, Reference reference);
+    boolean deleteReference(int id);
 }

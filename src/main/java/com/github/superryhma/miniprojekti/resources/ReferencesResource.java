@@ -1,15 +1,8 @@
 package com.github.superryhma.miniprojekti.resources;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
-import com.github.superryhma.miniprojekti.dao.impl.ReferenceDAOInMemoryImpl;
 import com.github.superryhma.miniprojekti.dao.impl.ReferenceDAOdbImpl;
 import com.github.superryhma.miniprojekti.models.Reference;
-import com.github.superryhma.miniprojekti.models.Tag;
-
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,8 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 @Path("references")
 @Produces(MediaType.APPLICATION_JSON)

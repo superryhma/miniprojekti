@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,6 +27,7 @@ public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
     private Map<Integer, Reference> references;
     int nextId;
 
+    @Autowired
     public ReferenceDAOInMemoryImpl() {
         references = new HashMap<>();
         nextId = 0;
@@ -46,6 +49,16 @@ public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
         reference.setCreatedAt(Date.from(Instant.now()));
         references.put(nextId++, reference);
         return reference;
+    }
+
+    @Override
+    public Reference updateReference(int id, Reference reference) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteReference(int id) {
+        return false;
     }
 
 }
