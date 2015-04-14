@@ -31,7 +31,9 @@ CREATE TABLE Reference(
     id SERIAL PRIMARY KEY,
     reference_type INTEGER NOT NULL REFERENCES Reference_type(id),
     project INTEGER NOT NULL REFERENCES Project(id),
-    bibtextname TEXT NOT NULL
+    bibtextname TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
  
 CREATE TABLE Attribute(

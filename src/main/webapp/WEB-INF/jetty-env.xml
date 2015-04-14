@@ -7,8 +7,8 @@
 		<Arg>jdbc/DataSource</Arg>
 		<Arg>
 			<New class="org.postgresql.ds.PGSimpleDataSource">
-				<Set name="User">superryhma</Set>
-				<Set name="Password"></Set>
+				<Set name="User">miniprojekti</Set>
+				<Set name="Password">secret</Set>
 				<Set name="DatabaseName">miniprojekti</Set>
 				<Set name="ServerName">localhost</Set>
 				<Set name="PortNumber">5432</Set>

@@ -1,17 +1,10 @@
 package com.github.superryhma.miniprojekti.models;
 
-import java.io.Serializable;
-
-
-public class Attribute implements Serializable {
-
+public class Attribute {
 
 	protected int id;
-
-	protected Reference reference;
-
-	protected AttributeType attribute_type;
-
+	protected int reference;
+	protected int attribute_type;
 	protected String value;
 
 	public Attribute() {
@@ -25,19 +18,19 @@ public class Attribute implements Serializable {
 		this.id = id;
 	}
 
-	public Reference getReference() {
+	public int getReference() {
 		return reference;
 	}
 
-	public void setReference(Reference reference) {
+	public void setReference(int reference) {
 		this.reference = reference;
 	}
 
-	public AttributeType getAttribute_type() {
+	public int getAttribute_type() {
 		return attribute_type;
 	}
 
-	public void setAttribute_type(AttributeType attribute_type) {
+	public void setAttribute_type(int attribute_type) {
 		this.attribute_type = attribute_type;
 	}
 

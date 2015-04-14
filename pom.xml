@@ -32,10 +32,10 @@
 				<artifactId>flyway-maven-plugin</artifactId>
 				<version>3.2.1</version>
 				<configuration>
-					<user>${postgresql.username}</user>
-					<password>${postgresql.password}</password>
-					<driver>com.postgresql.jdbc.Driver</driver>
-					<url>jdbc:postgresql://${postgresql.address}</url>
+					<user>miniprojekti</user>
+					<password>secret</password>
+					<driver>org.postgresql.Driver</driver>
+					<url>jdbc:postgresql://localhost:5432/miniprojekti</url>
 				</configuration>
 			</plugin>
 		</plugins>
