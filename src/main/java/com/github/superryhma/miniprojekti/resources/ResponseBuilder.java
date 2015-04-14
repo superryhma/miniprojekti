@@ -33,7 +33,7 @@ public class ResponseBuilder {
         return failureObject(400, "Missing field '" + fields.iterator().next() + "'");
     }
     public static JSONObject referenceNotFound() {
-        return failureObject(400, "Reference not found");
+        return failureObject(404, "Reference not found");
     }
     private static JSONObject successObject() {
         JSONObject jobj = new JSONObject();
