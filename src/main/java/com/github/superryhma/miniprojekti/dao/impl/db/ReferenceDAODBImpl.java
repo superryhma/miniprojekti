@@ -5,7 +5,6 @@ import com.github.superryhma.miniprojekti.jdbc.DBConnection;
 import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
 
-import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,8 +45,6 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 			connection.close();
 
 			return references;
-		} catch (NamingException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -84,8 +81,6 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 			connection.close();
 
 			return reference;
-		} catch (NamingException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -111,29 +106,26 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 			ps.setDate(4, new java.sql.Date(reference.getCreatedAt().getTime()));
 			ps.setDate(5, new java.sql.Date(reference.getUpdatedAt().getTime()));
 
-			ps.execute();
+			ResultSet resultSet = ps.executeQuery();
+			reference.setId(resultSet.getInt("id"));
 
 			ps.close();
 			c.close();
-		} catch (NamingException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return reference;
 	}
 
-	private static String getReferenceType(int reference_type)
-			throws NamingException, SQLException {
+	private static String getReferenceType(int reference_type) {
 		String query = "select * from Reference_type where id = ?";
 
 		DBConnection dbc = new DBConnection();
-		Connection connection = dbc.getConnection();
-
-		String type = null;
-
+		String type;
 		try {
+			Connection connection = dbc.getConnection();
+
 			PreparedStatement ps = connection.prepareStatement(query);
 
 			ps.setInt(1, reference_type);
@@ -148,14 +140,13 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 			ps.close();
 			connection.close();
 		} catch (SQLException ex) {
-
+			return null;
 		}
 
 		return type;
 	}
 
-	private String getAttributeType(int attributeType)
-			throws NamingException, SQLException {
+	private String getAttributeType(int attributeType) throws SQLException {
 		String query = "select attribute_type from Attribute_type where id = ?";
 
 		DBConnection dbc = new DBConnection();
@@ -175,8 +166,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return type;
 	}
 
-	private int getAttributeTypeId(String attributeType)
-			throws NamingException, SQLException {
+	private int getAttributeTypeId(String attributeType) throws SQLException {
 		String query = "select id from Attribute_type where attribute_type = ?";
 
 		DBConnection dbc = new DBConnection();
@@ -196,8 +186,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return id;
 	}
 
-	private int getReferenceTypeId(String referenceType)
-			throws NamingException, SQLException {
+	private int getReferenceTypeId(String referenceType) throws SQLException {
 		String query = "select id from Reference_type where reference_type = ?";
 
 		DBConnection dbc = new DBConnection();
@@ -217,8 +206,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return id;
 	}
 
-	private Set<String> loadTags(int reference) throws NamingException,
-			SQLException {
+	private Set<String> loadTags(int reference) throws SQLException {
 		String query = "select * from Tag where reference = ?";
 
 		DBConnection dbc = new DBConnection();
@@ -242,7 +230,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return tags;
 	}
 
-	private void saveTags(Reference reference) throws NamingException {
+	private void saveTags(Reference reference) {
 		try {
 			String sql = "INSERT INTO Tag (reference, value) \n"
 					+ "VALUES (?,?)";
@@ -266,8 +254,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		}
 	}
 
-	private Set<Attribute> loadAttributes(int reference)
-			throws NamingException, SQLException {
+	private Set<Attribute> loadAttributes(int reference) throws SQLException {
 		Set<Attribute> attributes = new HashSet<>();
 
 		String query = "select * from Attribute where reference = ?";
@@ -295,7 +282,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return attributes;
 	}
 
-	private void saveAttributes(Reference reference) throws NamingException {
+	private void saveAttributes(Reference reference) {
 		try {
 			String sql = "INSERT INTO Attribute (reference, attribute_type, value) \n"
 					+ "VALUES (?,?,?)";

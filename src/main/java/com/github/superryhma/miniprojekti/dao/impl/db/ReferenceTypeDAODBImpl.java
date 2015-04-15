@@ -46,8 +46,6 @@ public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -82,8 +80,6 @@ public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
 
             return optFieldNames;
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NamingException e) {
             e.printStackTrace();
         }
         return null;
@@ -121,8 +117,6 @@ public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
 
             return referenceTypes;
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (NamingException e) {
             e.printStackTrace();
         }
         return null;
