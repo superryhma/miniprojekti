@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.github.superryhma.miniprojekti.dao.impl;
+package com.github.superryhma.miniprojekti.dao.impl.inmemory;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
 import com.github.superryhma.miniprojekti.models.Reference;
@@ -17,10 +12,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- *
- * @author jgke
- */
 @Component
 public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
 
@@ -60,5 +51,4 @@ public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
     public boolean deleteReference(int id) {
         return false;
     }
-
 }

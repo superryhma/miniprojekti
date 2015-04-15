@@ -1,7 +1,6 @@
 package com.github.superryhma.miniprojekti.models;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 public class Reference {
@@ -21,6 +20,10 @@ public class Reference {
         this.updatedAt = updatedAt;
         this.attributes = attributes;
         this.tags = tags;
+    }
+
+    public Reference() {
+
     }
 
     public int getId() {

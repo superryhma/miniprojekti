@@ -1,7 +1,7 @@
 package com.github.superryhma.miniprojekti.dao.impl;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
-import com.github.superryhma.miniprojekti.models.Attribute;
+import com.github.superryhma.miniprojekti.dao.impl.inmemory.ReferenceDAOInMemoryImpl;
 import com.github.superryhma.miniprojekti.models.Reference;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,8 @@ public class ReferenceDAOInMemoryImplTest {
 
     @Test
     public void canAddReferenceToDatabase() {
-        Reference ref = new Reference("article", "test", Date.from(Instant.now()), null, new HashSet<>(), new HashSet<>());
+        Reference ref = new Reference("article", "test", Date.from(Instant.now()),
+                null, new HashSet<>(), new HashSet<>());
         dao.addReference(ref);
         assertEquals(dao.getReferences().size(), 1);
     }

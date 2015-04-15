@@ -1,8 +1,8 @@
 package com.github.superryhma.miniprojekti.resources;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
-import com.github.superryhma.miniprojekti.dao.impl.ReferenceTypeDAOInMemoryImpl;
-import com.github.superryhma.miniprojekti.models.AttributeType;
+import com.github.superryhma.miniprojekti.dao.impl.db.ReferenceTypeDAODBImpl;
+import com.github.superryhma.miniprojekti.models.ReferenceType;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,11 +15,11 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 public class TypesResource {
 
-	private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAOInMemoryImpl();
+	private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAODBImpl();
 	
 	@GET
 	public Response getTypes() {
-		Set<AttributeType> types = referenceTypeDAO.getTypes();
+		Set<ReferenceType> types = referenceTypeDAO.getTypes();
 		return ResponseBuilder.getAPITypes(types);
 	}
 }

@@ -10,6 +10,9 @@ public class Attribute {
 		this.value = value;
 	}
 
+	public Attribute() {
+	}
+
 	public String getAttributeType() {
 		return attributeType;
 	}

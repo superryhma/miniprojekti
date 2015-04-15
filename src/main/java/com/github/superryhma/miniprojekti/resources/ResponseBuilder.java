@@ -1,7 +1,7 @@
 package com.github.superryhma.miniprojekti.resources;
 
 import com.github.superryhma.miniprojekti.models.Attribute;
-import com.github.superryhma.miniprojekti.models.AttributeType;
+import com.github.superryhma.miniprojekti.models.ReferenceType;
 import com.github.superryhma.miniprojekti.models.Reference;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,12 +87,12 @@ public class ResponseBuilder {
                 .entity(jobj.toString())
                 .build();
     }
-    public static Response getAPITypes(Set<AttributeType> attributeTypes) {
+    public static Response getAPITypes(Set<ReferenceType> referenceTypes) {
         JSONObject jobj = successObject();
         JSONArray jarr = new JSONArray();
-        for(AttributeType at : attributeTypes) {
+        for(ReferenceType at : referenceTypes) {
             JSONObject j = new JSONObject();
-            j.put("name", at.getType());
+            j.put("name", at.getName());
             j.put("required", new ArrayList<>(at.getRequiredAttributes()));
             j.put("optional", new ArrayList<>(at.getOptionalAttributes()));
             jarr.put(j);

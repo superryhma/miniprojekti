@@ -1,7 +1,7 @@
-package com.github.superryhma.miniprojekti.dao.impl;
+package com.github.superryhma.miniprojekti.dao.impl.inmemory;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
-import com.github.superryhma.miniprojekti.models.AttributeType;
+import com.github.superryhma.miniprojekti.models.ReferenceType;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,11 +41,11 @@ public class ReferenceTypeDAOInMemoryImpl implements ReferenceTypeDAO {
     }
 
     @Override
-    public Set<AttributeType> getTypes() {
-        Set<AttributeType> attributeTypes = new HashSet<>();
+    public Set<ReferenceType> getTypes() {
+        Set<ReferenceType> referenceTypes = new HashSet<>();
         for(String s : requiredTypes.keySet()) {
-            attributeTypes.add(new AttributeType(s, requiredTypes.get(s), optionalTypes.get(s)));
+            referenceTypes.add(new ReferenceType(s, requiredTypes.get(s), optionalTypes.get(s)));
         }
-        return attributeTypes;
+        return referenceTypes;
     }
 }
