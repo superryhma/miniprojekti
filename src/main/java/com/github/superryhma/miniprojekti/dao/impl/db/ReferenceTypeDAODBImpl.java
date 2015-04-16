@@ -1,125 +1,54 @@
 package com.github.superryhma.miniprojekti.dao.impl.db;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
-import com.github.superryhma.miniprojekti.jdbc.DBConnection;
+import com.github.superryhma.miniprojekti.dao.impl.db.models.AttributeType;
+import com.github.superryhma.miniprojekti.dao.impl.db.models.ReferenceTypeDb;
+import com.github.superryhma.miniprojekti.dbc.Dbc;
 import com.github.superryhma.miniprojekti.models.ReferenceType;
 
-import javax.naming.NamingException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+;
 
 public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
 
-    @Override
-    public Set<String> getRequiredFields(String type) {
-        try {
-            String query = "select Attribute_type.name \n"
-                    + "from Attribute_type, Dependency, Reference_type \n"
-                    + "where Attribute_type.id = Dependency.attribute_type \n"
-                    + "and Dependency.required = 'true' \n"
-                    + "and Dependency.reference_type = Reference_type.id \n"
-                    + "and Reference_type.name = ?";
+	@Override
+	public Set<String> getRequiredFields(String type) {
+		return getFields(type, true);
+	}
 
-            DBConnection dbc = new DBConnection();
-            Connection connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query);
+	@Override
+	public Set<String> getOptionalFields(String type) {
+		return getFields(type, false);
+	}
 
-            ps.setString(1, type);
+	@Override
+	public Set<ReferenceType> getTypes() {
+		Dbc.open();
+		List<ReferenceTypeDb> typesList = ReferenceTypeDb.findAll();
+		Set<ReferenceType> typesSet = new HashSet<>();
+		String name;
+		for (ReferenceTypeDb type : typesList) {
+			name = (String) type.get("name");
+			typesSet.add(new ReferenceType(name, getFields(name, true),
+					getFields(name, false)));
+		}
+		Dbc.close();
+		return typesSet;
+	}
 
-            ResultSet rs = ps.executeQuery();
+	private Set<String> getFields(String type, boolean required) {
+		Dbc.open();
+		ReferenceTypeDb rt = ReferenceTypeDb.findFirst("name = ?", type);
+		List<AttributeType> typesList = rt.get(AttributeType.class, "required = ?", required);
+		Set<String> typesSet = new HashSet<String>();
+		for (AttributeType t : typesList) {
+			typesSet.add(t.getString("name"));
+		}
+		Dbc.close();
+		return typesSet;
+	}
 
-            Set<String> optFieldNames = new HashSet<>();
-
-            while (rs.next()) {
-                optFieldNames.add(rs.getString(1));
-            }
-
-            rs.close();
-            ps.close();
-            connection.close();
-
-            return optFieldNames;
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Set<String> getOptionalFields(String type) {
-        try {
-            String query = "select Attribute_type.name \n"
-                    + "from Attribute_type, Dependency, Reference_type \n"
-                    + "where Attribute_type.id = Dependency.attribute_type \n"
-                    + "and Dependency.required = 'false' \n"
-                    + "and Dependency.reference_type = Reference_type.id \n"
-                    + "and Reference_type.name = ?";
-
-            DBConnection dbc = new DBConnection();
-            Connection connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement(query);
-
-            ps.setString(1, type);
-
-            ResultSet rs = ps.executeQuery();
-
-            Set<String> optFieldNames = new HashSet<>();
-
-            while (rs.next()) {
-                optFieldNames.add(rs.getString(1));
-            }
-
-            rs.close();
-            ps.close();
-            connection.close();
-
-            return optFieldNames;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public Set<ReferenceType> getTypes() {
-        try {
-            String query = "select * from Reference_type";
-
-            DBConnection dbc = new DBConnection();
-            Connection connection = dbc.getConnection();
-
-            Set<ReferenceType> referenceTypes = new HashSet<>();
-
-            PreparedStatement ps = connection.prepareStatement(query);
-
-            ResultSet rs = ps.executeQuery();
-
-
-            while (rs.next()) {
-                ReferenceType referenceType = new ReferenceType();
-                referenceType.setName(rs.getString("name"));
-                Set<String> l = new HashSet<>();
-                l.addAll(getRequiredFields(rs.getString("name")));
-                referenceType.setRequiredAttributes(l);
-                l.clear();
-                l.addAll(getOptionalFields(rs.getString("name")));
-                referenceType.setOptionalAttributes(l);
-                referenceTypes.add(referenceType);
-            }
-
-            ps.close();
-            connection.close();
-
-            return referenceTypes;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }
-

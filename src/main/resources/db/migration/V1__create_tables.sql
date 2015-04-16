@@ -1,50 +1,55 @@
-CREATE TABLE Users(
+CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     username TEXT NOT NULL,
     digestive TEXT NOT NULL
 );
  
-CREATE TABLE Project(
+CREATE TABLE projects(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    owner INTEGER NOT NULL REFERENCES Users(id)
+    owner INTEGER NOT NULL REFERENCES users(id)
 );
  
-CREATE TABLE Reference_type(
+CREATE TABLE reference_types(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
  
-CREATE TABLE Attribute_type(
+CREATE TABLE attribute_types(
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL
 );
  
-CREATE TABLE Dependency(
-    reference_type INTEGER REFERENCES Reference_type(id),
-    attribute_type INTEGER REFERENCES Attribute_type(id),
+CREATE TABLE reference_types_attribute_types(
+    reference_type_id INTEGER REFERENCES reference_types(id),
+    attribute_type_id INTEGER REFERENCES attribute_types(id),
     required BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (reference_type, attribute_type)
+    PRIMARY KEY (reference_type_id, attribute_type_id)
 );
  
-CREATE TABLE Reference(
+CREATE TABLE project_references(
     id SERIAL PRIMARY KEY,
-    reference_type INTEGER NOT NULL REFERENCES Reference_type(id),
-    project INTEGER NOT NULL REFERENCES Project(id),
+    reference_type_id INTEGER NOT NULL REFERENCES reference_types(id),
+    project INTEGER NOT NULL REFERENCES projects(id),
     bibtextname TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );
  
-CREATE TABLE Attribute(
+CREATE TABLE attributes(
     id SERIAL PRIMARY KEY,
-    reference INTEGER NOT NULL REFERENCES Reference(id),
-    attribute_type INTEGER NOT NULL REFERENCES Attribute_type(id),
+    project_reference_id INTEGER NOT NULL REFERENCES project_references(id),
+    attribute_type_id INTEGER NOT NULL REFERENCES attribute_types(id),
     value TEXT NOT NULL
 );
  
-CREATE TABLE Tag(
+CREATE TABLE tags(
     id SERIAL PRIMARY KEY,
-    reference INTEGER REFERENCES Reference(id),
     value TEXT NOT NULL
+);
+
+CREATE TABLE project_references_tags(
+    project_reference_id INTEGER REFERENCES project_references(id),
+    tag_id INTEGER REFERENCES tags(id),
+    PRIMARY KEY (project_reference_id, tag_id)
 );

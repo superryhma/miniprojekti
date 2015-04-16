@@ -6,7 +6,7 @@
 		<Arg></Arg>
 		<Arg>jdbc/DataSource</Arg>
 		<Arg>
-			<New class="org.postgresql.ds.PGSimpleDataSource">
+			<New class="org.postgresql.ds.PGPoolingDataSource">
 				<Set name="User">miniprojekti</Set>
 				<Set name="Password">secret</Set>
 				<Set name="DatabaseName">miniprojekti</Set>

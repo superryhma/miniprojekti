@@ -1,46 +1,46 @@
-INSERT INTO Reference_type (name) VALUES ('article');
+INSERT INTO reference_types (name) VALUES ('article');
 
-INSERT INTO Attribute_type (name) VALUES ('author');
-INSERT INTO Attribute_type (name) VALUES ('title');
-INSERT INTO Attribute_type (name) VALUES ('journal');
-INSERT INTO Attribute_type (name) VALUES ('year');
-INSERT INTO Attribute_type (name) VALUES ('volume');
-INSERT INTO Attribute_type (name) VALUES ('number');
-INSERT INTO Attribute_type (name) VALUES ('pages');
-INSERT INTO Attribute_type (name) VALUES ('month');
-INSERT INTO Attribute_type (name) VALUES ('note');
-INSERT INTO Attribute_type (name) VALUES ('key');
+INSERT INTO attribute_types (name) VALUES ('author');
+INSERT INTO attribute_types (name) VALUES ('title');
+INSERT INTO attribute_types (name) VALUES ('journal');
+INSERT INTO attribute_types (name) VALUES ('year');
+INSERT INTO attribute_types (name) VALUES ('volume');
+INSERT INTO attribute_types (name) VALUES ('number');
+INSERT INTO attribute_types (name) VALUES ('pages');
+INSERT INTO attribute_types (name) VALUES ('month');
+INSERT INTO attribute_types (name) VALUES ('note');
+INSERT INTO attribute_types (name) VALUES ('key');
 
-INSERT INTO Users (username, digestive) VALUES ('miniprojectuser','digestive');
-INSERT INTO Project (name, owner) VALUES ('miniproject',1);
+INSERT INTO users (username, digestive) VALUES ('miniprojectuser','digestive');
+INSERT INTO projects (name, owner) VALUES ('miniproject',1);
 
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES 
-((select id from Reference_type where name = 'article'), 
-(select id from Attribute_type where name = 'author'), 'true');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'title'), 'true');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'journal'), 'true');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'year'), 'true');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'volume'), 'true');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'number'), 'false');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'pages'), 'false');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'month'), 'false');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'note'), 'false');
-INSERT INTO Dependency (reference_type, attribute_type, required) VALUES
-((select id from Reference_type where name = 'article'),
-(select id from Attribute_type where name = 'key'), 'false');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES 
+((select id from reference_types where name = 'article'), 
+(select id from attribute_types where name = 'author'), 'true');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'title'), 'true');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'journal'), 'true');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'year'), 'true');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'volume'), 'true');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'number'), 'false');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'pages'), 'false');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'month'), 'false');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'note'), 'false');
+INSERT INTO reference_types_attribute_types (reference_type_id, attribute_type_id, required) VALUES
+((select id from reference_types where name = 'article'),
+(select id from attribute_types where name = 'key'), 'false');
