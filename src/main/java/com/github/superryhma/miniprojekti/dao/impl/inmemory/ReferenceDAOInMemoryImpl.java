@@ -2,6 +2,7 @@ package com.github.superryhma.miniprojekti.dao.impl.inmemory;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
 import com.github.superryhma.miniprojekti.models.Reference;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
 
-    private Map<Integer, Reference> references;
     int nextId;
+    private Map<Integer, Reference> references;
 
     @Autowired
     public ReferenceDAOInMemoryImpl() {

@@ -15,11 +15,11 @@ import java.util.Set;
 @Produces(MediaType.APPLICATION_JSON)
 public class TypesResource {
 
-	private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAODBImpl();
-	
-	@GET
-	public Response getTypes() {
-		Set<ReferenceType> types = referenceTypeDAO.getTypes();
-		return ResponseBuilder.getAPITypes(types);
-	}
+    private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAODBImpl();
+
+    @GET
+    public Response getTypes() {
+        Set<ReferenceType> types = referenceTypeDAO.getTypes();
+        return ResponseBuilder.getAPITypes(types);
+    }
 }
