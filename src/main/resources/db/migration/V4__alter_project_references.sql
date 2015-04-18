@@ -1,0 +1,1 @@
+ALTER TABLE project_references ADD CONSTRAINT project_bibtextname UNIQUE (project, bibtextname);
