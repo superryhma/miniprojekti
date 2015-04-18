@@ -36,8 +36,11 @@ public class Attribute {
 
         Attribute attribute = (Attribute) o;
 
-        return !(attributeType != null ? !attributeType.equals(attribute.attributeType) : attribute.attributeType != null);
-
+        if (attributeType != null) {
+            return attributeType.equals(attribute.attributeType);
+        } else {
+            return attribute.attributeType == null;
+        }
     }
 
     @Override

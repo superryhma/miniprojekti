@@ -39,9 +39,8 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
         Set<Attribute> attributesSet = new HashSet<Attribute>();
         for (AttributeDb attribute : attributesList) {
-            attributesSet.add(new Attribute(attribute.parent(
-                    AttributeType.class).getString("name"), attribute
-                    .getString("value")));
+            attributesSet.add(new Attribute(attribute.parent(AttributeType.class).getString("name"),
+                    attribute.getString("value")));
         }
         List<Tag> tagsList = pr.getAll(Tag.class);
         Set<String> tagsSet = new HashSet<String>();

@@ -13,7 +13,8 @@ public class Reference {
     private Set<Attribute> attributes;
     private Set<String> tags;
 
-    public Reference(String type, String bibtexname, Date createdAt, Date updatedAt, Set<Attribute> attributes, Set<String> tags) {
+    public Reference(String type, String bibtexname, Date createdAt, Date updatedAt,
+                     Set<Attribute> attributes, Set<String> tags) {
         this.type = type;
         this.bibtexname = bibtexname;
         this.createdAt = createdAt;

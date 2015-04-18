@@ -66,7 +66,9 @@ public class ReferencesResource {
         for (int i = 0; i < arr.length(); i++) {
             tags.add(arr.getString(i));
         }
-        Reference ref = new Reference(jobj.getString("type"), jobj.getString("name"), Date.from(Instant.now()), null, attr, tags);
+        Reference ref = new Reference(jobj.getString("type"),
+                jobj.getString("name"),
+                Date.from(Instant.now()), null, attr, tags);
         return ResponseBuilder.successAddReference(referenceDAO.addReference(ref));
     }
 }
