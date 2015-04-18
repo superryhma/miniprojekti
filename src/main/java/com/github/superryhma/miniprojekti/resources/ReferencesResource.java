@@ -4,6 +4,8 @@ import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
 import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
 import com.github.superryhma.miniprojekti.dao.impl.db.ReferenceDAODBImpl;
 import com.github.superryhma.miniprojekti.dao.impl.db.ReferenceTypeDAODBImpl;
+import com.github.superryhma.miniprojekti.dao.impl.inmemory.ReferenceDAOInMemoryImpl;
+import com.github.superryhma.miniprojekti.dao.impl.inmemory.ReferenceTypeDAOInMemoryImpl;
 import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
 import org.json.JSONArray;
@@ -26,8 +28,19 @@ public class ReferencesResource {
     protected String path = "/api/references/";
 
     @GET
-    public Response getReferences() throws Exception {
+    public Response getReferences() {
         return ResponseBuilder.successGetReferences(referenceDAO.getReferences());
+    }
+
+    @GET
+    @Produces("text/x-bibtex")
+    public Response getReferencesAsBiBTeX() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Reference reference : referenceDAO.getReferences()) {
+            stringBuilder.append(reference.toBiBTeX());
+            stringBuilder.append('\n');
+        }
+        return Response.status(200).entity(stringBuilder.toString()).build();
     }
 
     @GET
@@ -36,6 +49,17 @@ public class ReferencesResource {
         Reference ref = referenceDAO.getReferenceById(id);
         if (ref != null)
             return ResponseBuilder.successGetReferenceById(ref);
+        return ResponseBuilder.referenceNotFound();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces("text/x-bibtex")
+    public Response getReferenceByIDAsBiBTeX(@PathParam("id") int id) {
+        Reference ref = referenceDAO.getReferenceById(id);
+        if (ref != null) {
+            return Response.status(200).entity(ref.toBiBTeX()).build();
+        }
         return ResponseBuilder.referenceNotFound();
     }
 
@@ -66,7 +90,9 @@ public class ReferencesResource {
         for (int i = 0; i < arr.length(); i++) {
             tags.add(arr.getString(i));
         }
-        Reference ref = new Reference(jobj.getString("type"), jobj.getString("name"), Date.from(Instant.now()), null, attr, tags);
+        Reference ref = new Reference(jobj.getString("type"),
+                jobj.getString("name"),
+                Date.from(Instant.now()), null, attr, tags);
         return ResponseBuilder.successAddReference(referenceDAO.addReference(ref));
     }
 }

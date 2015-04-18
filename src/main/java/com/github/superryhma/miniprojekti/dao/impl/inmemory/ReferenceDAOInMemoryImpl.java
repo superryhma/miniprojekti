@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReferenceDAOInMemoryImpl implements ReferenceDAO {
 
-    int nextId;
+    private int nextId;
     private Map<Integer, Reference> references;
 
     @Autowired
