@@ -1,5 +1,12 @@
 # miniprojekti
 
+## settings for local db
+
+- User: miniprojekti
+- Password: secret
+- Database name: miniprojekti
+- PortNumber: 5432
+
 ## building the frontend
 
     npm install -g gulp bower coffee-script
