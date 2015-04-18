@@ -91,16 +91,15 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 		return reference;
 	}
 
-	@Override
-	public Reference updateReference(int id, Reference reference) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Reference updateReference(int id, Reference reference) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public boolean deleteReference(int id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+    @Override
+    public boolean deleteReference(int id) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

@@ -28,14 +28,14 @@ public class ReferenceTypeDAOInMemoryImpl implements ReferenceTypeDAO {
 
     @Override
     public Set<String> getRequiredFields(String type) {
-        if(requiredTypes.containsKey(type))
+        if (requiredTypes.containsKey(type))
             return requiredTypes.get(type);
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Set<String> getOptionalFields(String type) {
-        if(optionalTypes.containsKey(type))
+        if (optionalTypes.containsKey(type))
             return optionalTypes.get(type);
         throw new UnsupportedOperationException();
     }
@@ -43,7 +43,7 @@ public class ReferenceTypeDAOInMemoryImpl implements ReferenceTypeDAO {
     @Override
     public Set<ReferenceType> getTypes() {
         Set<ReferenceType> referenceTypes = new HashSet<>();
-        for(String s : requiredTypes.keySet()) {
+        for (String s : requiredTypes.keySet()) {
             referenceTypes.add(new ReferenceType(s, requiredTypes.get(s), optionalTypes.get(s)));
         }
         return referenceTypes;

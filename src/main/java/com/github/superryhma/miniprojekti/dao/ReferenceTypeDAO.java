@@ -6,6 +6,8 @@ import java.util.Set;
 
 public interface ReferenceTypeDAO {
     Set<String> getRequiredFields(String type);
+
     Set<String> getOptionalFields(String type);
+
     Set<ReferenceType> getTypes();
 }

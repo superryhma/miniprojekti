@@ -24,7 +24,7 @@ public class ReferencesResource {
     private static ReferenceDAO referenceDAO = new ReferenceDAODBImpl();
     private static ReferenceTypeDAO referenceTypeDAO = new ReferenceTypeDAODBImpl();
     protected String path = "/api/references/";
-    
+
     @GET
     public Response getReferences() throws Exception {
         return ResponseBuilder.successGetReferences(referenceDAO.getReferences());
@@ -34,7 +34,7 @@ public class ReferencesResource {
     @Path("/{id}")
     public Response getReferenceById(@PathParam("id") int id) {
         Reference ref = referenceDAO.getReferenceById(id);
-        if(ref != null)
+        if (ref != null)
             return ResponseBuilder.successGetReferenceById(ref);
         return ResponseBuilder.referenceNotFound();
     }
@@ -48,22 +48,22 @@ public class ReferencesResource {
         Set<String> requiredAttributes = new HashSet<>(referenceTypeDAO.getRequiredFields(jobj.getString("type")));
         Set<String> allAttributes = new HashSet<>(referenceTypeDAO.getOptionalFields(jobj.getString("type")));
         allAttributes.addAll(requiredAttributes);
-        for(String key : jfields.keySet()) {
-            if(requiredAttributes.contains(key)) {
+        for (String key : jfields.keySet()) {
+            if (requiredAttributes.contains(key)) {
                 requiredAttributes.remove(key);
             }
-            if(!allAttributes.contains(key)) {
+            if (!allAttributes.contains(key)) {
                 return ResponseBuilder.invalidReferenceField(key);
             }
             allAttributes.remove(key);
             attr.add(new Attribute(key, jfields.get(key).toString()));
         }
-        if(requiredAttributes.size() > 0) {
+        if (requiredAttributes.size() > 0) {
             return ResponseBuilder.missingField(requiredAttributes);
         }
         Set<String> tags = new HashSet<>();
         JSONArray arr = jobj.getJSONArray("tags");
-        for(int i = 0; i < arr.length(); i++) {
+        for (int i = 0; i < arr.length(); i++) {
             tags.add(arr.getString(i));
         }
         Reference ref = new Reference(jobj.getString("type"), jobj.getString("name"), Date.from(Instant.now()), null, attr, tags);
