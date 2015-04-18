@@ -54,13 +54,6 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 				.getTimestamp("created_at").getTime()), attributesSet, tagsSet);
 		reference.setId((Integer) pr.getId());
 		Dbc.close();
-		System.out.println(reference.getBibtexname());
-		System.out.println(reference.getId());
-		System.out.println(reference.getType());
-		System.out.println(reference.getAttributes());
-		System.out.println(reference.getCreatedAt());
-		System.out.println(reference.getTags());
-		System.out.println(reference.getUpdatedAt());
 		return reference;
 	}
 
