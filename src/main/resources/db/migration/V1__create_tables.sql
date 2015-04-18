@@ -36,8 +36,8 @@ CREATE TABLE project_references(
     updated_at TIMESTAMP NOT NULL
 );
  
-CREATE TABLE attributes(
-    id SERIAL PRIMARY KEY,
+CREATE TABLE reference_attributes(
+	id SERIAL PRIMARY KEY,
     project_reference_id INTEGER NOT NULL REFERENCES project_references(id),
     attribute_type_id INTEGER NOT NULL REFERENCES attribute_types(id),
     value TEXT NOT NULL
@@ -49,7 +49,7 @@ CREATE TABLE tags(
 );
 
 CREATE TABLE project_references_tags(
+	id SERIAL PRIMARY KEY,
     project_reference_id INTEGER REFERENCES project_references(id),
-    tag_id INTEGER REFERENCES tags(id),
-    PRIMARY KEY (project_reference_id, tag_id)
+    tag_id INTEGER REFERENCES tags(id)
 );

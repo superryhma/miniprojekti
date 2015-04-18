@@ -56,7 +56,7 @@ public class ReferencesResource {
                 return ResponseBuilder.invalidReferenceField(key);
             }
             allAttributes.remove(key);
-            attr.add(new Attribute(key, jfields.getString(key)));
+            attr.add(new Attribute(key, jfields.get(key).toString()));
         }
         if(requiredAttributes.size() > 0) {
             return ResponseBuilder.missingField(requiredAttributes);
