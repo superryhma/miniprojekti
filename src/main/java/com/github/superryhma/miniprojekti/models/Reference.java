@@ -1,22 +1,27 @@
 package com.github.superryhma.miniprojekti.models;
 
+import com.github.superryhma.miniprojekti.utils.BibtexUtils;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class Reference {
 
     private int id;
     private String type;
-    private String bibtexname;
+    private String bibtexName;
     private Date createdAt;
     private Date updatedAt;
     private Set<Attribute> attributes;
     private Set<String> tags;
 
-    public Reference(String type, String bibtexname, Date createdAt, Date updatedAt,
-                     Set<Attribute> attributes, Set<String> tags) {
+    public Reference(String type, String bibtexName, Date createdAt, Date updatedAt,
+            Set<Attribute> attributes, Set<String> tags) {
         this.type = type;
-        this.bibtexname = bibtexname;
+        this.bibtexName = bibtexName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.attributes = attributes;
@@ -43,12 +48,12 @@ public class Reference {
         this.type = type;
     }
 
-    public String getBibtexname() {
-        return bibtexname;
+    public String getBibtexName() {
+        return bibtexName;
     }
 
-    public void setBibtexname(String bibtexname) {
-        this.bibtexname = bibtexname;
+    public void setBibtexName(String bibtexName) {
+        this.bibtexName = bibtexName;
     }
 
     public Date getCreatedAt() {
@@ -81,5 +86,43 @@ public class Reference {
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jobj = new JSONObject();
+        jobj.put("id", getId());
+        jobj.put("name", getBibtexName());
+        jobj.put("created_at", getCreatedAt());
+        jobj.put("updated_at", getUpdatedAt());
+        jobj.put("type", getType());
+        JSONObject attrs = new JSONObject();
+        for (Attribute attr : getAttributes()) {
+            attrs.put(attr.getAttributeType(), attr.getValue());
+        }
+        jobj.put("fields", attrs);
+        jobj.put("tags", new ArrayList<>(getTags()));
+        return jobj;
+    }
+
+    public String toBiBTeX() {
+        StringBuilder str = new StringBuilder();
+        str.append('@');
+        str.append(getType().substring(0, 1).toUpperCase());
+        str.append(getType().substring(1));
+        str.append('{');
+        str.append(getBibtexName());
+        str.append(",\n");
+        if(getAttributes().size() > 0) {
+            str.append("  ");
+            StringJoiner stringJoiner = new StringJoiner(",\n  ");
+            for(Attribute attribute : getAttributes()) {
+                stringJoiner.add(attribute.getAttributeType() +
+                        " = \"" + attribute.getValue() + "\"");
+            }
+            str.append(stringJoiner);
+            str.append("\n");
+        }
+        str.append('}');
+        return BibtexUtils.escapeBiBTeXString(str.toString());
     }
 }

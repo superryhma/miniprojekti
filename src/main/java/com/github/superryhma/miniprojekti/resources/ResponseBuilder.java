@@ -66,7 +66,7 @@ public class ResponseBuilder {
     private static JSONObject referenceToJSON(Reference reference) {
         JSONObject jobj = new JSONObject();
         jobj.put("id", reference.getId());
-        jobj.put("name", reference.getBibtexname());
+        jobj.put("name", reference.getBibtexName());
         jobj.put("created_at", reference.getCreatedAt());
         jobj.put("type", reference.getType());
         JSONObject attrs = new JSONObject();

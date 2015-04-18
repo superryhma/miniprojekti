@@ -60,7 +60,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     public Reference addReference(Reference reference) {
         Dbc.open();
         ProjectReference r = new ProjectReference();
-        r.set("bibtextname", reference.getBibtexname());
+        r.set("bibtextname", reference.getBibtexName());
         r.set("project", Project.findFirst("name = ?", "miniproject").getId());
         r.set("reference_type_id", ReferenceTypeDb.findFirst("name = ?", reference.getType()).getId());
         r.save();
