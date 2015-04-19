@@ -39,8 +39,9 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
         Set<Attribute> attributesSet = new HashSet<Attribute>();
         for (AttributeDb attribute : attributesList) {
-            attributesSet.add(new Attribute(attribute.parent(AttributeType.class).getString("name"),
-                    attribute.getString("value")));
+            attributesSet.add(new Attribute(attribute.parent(
+                    AttributeType.class).getString("name"), attribute
+                    .getString("value")));
         }
         List<Tag> tagsList = pr.getAll(Tag.class);
         Set<String> tagsSet = new HashSet<String>();
@@ -60,38 +61,88 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     public Reference addReference(Reference reference) {
         Dbc.open();
         ProjectReference r = new ProjectReference();
-        r.set("bibtextname", reference.getBibtexName());
-        r.set("project", Project.findFirst("name = ?", "miniproject").getId());
-        r.set("reference_type_id", ReferenceTypeDb.findFirst("name = ?", reference.getType()).getId());
-        r.save();
-        AttributeDb a;
-        AttributeType at;
-        for (Attribute attribute : reference.getAttributes()) {
-            a = new AttributeDb();
-            a.set("project_reference_id", r.getId());
-            a.set("value", attribute.getValue());
-            at = AttributeType.findFirst("name = ?", attribute.getAttributeType());
-            at.add(a);
-            a.save();
-        }
-        Tag tag;
-        for (String tagString : reference.getTags()) {
-            tag = Tag.create("value", tagString);
-            r.add(tag);
-        }
+        insertReference(reference, r);
+        insertAttributes(reference, r);
+        insertTags(reference, r);
         Dbc.close();
         return reference;
     }
 
     @Override
     public Reference updateReference(int id, Reference reference) {
-        // TODO Auto-generated method stub
-        return null;
+        Dbc.open();
+        ProjectReference pr = ProjectReference.findFirst("id = ?", id);
+        deleteTags(pr);
+        deleteAttributes(pr);
+        insertReference(reference, pr);
+        insertTags(reference, pr);
+        insertAttributes(reference, pr);
+        Dbc.close();
+        return reference;
     }
 
     @Override
     public boolean deleteReference(int id) {
-        // TODO Auto-generated method stub
-        return false;
+        Dbc.open();
+        ProjectReference pr = ProjectReference.findFirst("id = ?", id);
+        deleteTags(pr);
+        deleteAttributes(pr);
+        pr.delete();
+        Dbc.close();
+        return true;
+    }
+
+    private void deleteAttributes(ProjectReference pr) {
+        Dbc.open();
+        List<AttributeDb> a = pr.getAll(AttributeDb.class);
+        for (AttributeDb attribute : a) {
+            attribute.delete();
+        }
+        Dbc.close();
+    }
+
+    private void deleteTags(ProjectReference pr) {
+        Dbc.open();
+        List<Tag> t = pr.getAll(Tag.class);
+        for (Tag tag : t) {
+            pr.remove(tag);
+        }
+        Dbc.close();
+    }
+
+    private void insertReference(Reference reference, ProjectReference pr) {
+        Dbc.open();
+        pr.set("bibtextname", reference.getBibtexName());
+        pr.set("project", Project.findFirst("name = ?", "miniproject").getId());
+        pr.set("reference_type_id",
+                ReferenceTypeDb.findFirst("name = ?", reference.getType())
+                        .getId());
+        pr.save();
+        Dbc.close();
+    }
+
+    private void insertTags(Reference r, ProjectReference pr) {
+        Dbc.open();
+        Tag tag;
+        for (String tagString : r.getTags()) {
+            tag = Tag.create("value", tagString);
+            pr.add(tag);
+        }
+        Dbc.close();
+    }
+
+    private void insertAttributes(Reference r, ProjectReference pr) {
+        Dbc.open();
+        AttributeDb a;
+        AttributeType at;
+        for (Attribute attribute : r.getAttributes()) {
+            a = new AttributeDb();
+            a.set("project_reference_id", pr.getId());
+            a.set("value", attribute.getValue());
+            at = AttributeType.findFirst("name = ?",
+                    attribute.getAttributeType());
+            at.add(a);
+        }
+        Dbc.close();
     }
 }

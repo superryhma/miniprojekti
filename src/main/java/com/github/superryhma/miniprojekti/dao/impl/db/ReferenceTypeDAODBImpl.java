@@ -10,8 +10,6 @@ import com.github.superryhma.miniprojekti.dao.impl.db.models.ReferenceTypeDb;
 import com.github.superryhma.miniprojekti.dbc.Dbc;
 import com.github.superryhma.miniprojekti.models.ReferenceType;
 
-;
-
 public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
 
     @Override
@@ -42,7 +40,8 @@ public class ReferenceTypeDAODBImpl implements ReferenceTypeDAO {
     private Set<String> getFields(String type, boolean required) {
         Dbc.open();
         ReferenceTypeDb rt = ReferenceTypeDb.findFirst("name = ?", type);
-        List<AttributeType> typesList = rt.get(AttributeType.class, "required = ?", required);
+        List<AttributeType> typesList = rt.get(AttributeType.class,
+                "required = ?", required);
         Set<String> typesSet = new HashSet<String>();
         for (AttributeType t : typesList) {
             typesSet.add(t.getString("name"));
