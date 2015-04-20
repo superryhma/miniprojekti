@@ -9,3 +9,7 @@ before_script:
   - mvn flyway:migrate
 script:
   - mvn integration-test
+notifications:
+  irc:
+    channels:
+      - "openirc.snt.utwente.nl#superryhmä"
