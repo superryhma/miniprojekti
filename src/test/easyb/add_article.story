@@ -28,7 +28,7 @@ scenario 'User adds a article', {
     }
     then 'The response is OK!', {
         assert response.status == 200
-        // json_response = (new JsonSlurper()).parseText(response.data.text)
-        // assert json_response.success == true
+        assert response.data.success
+        assert response.data.id != null
     }
 }
