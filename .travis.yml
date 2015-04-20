@@ -8,7 +8,7 @@ install:
 before_script:
   - createuser miniprojekti -d -U postgres
   - createdb miniprojekti -U postgres -O miniprojekti
-  - mvn flyway:migrate
+  - mvn compile flyway:migrate
 script:
   - mvn integration-test
 notifications:
