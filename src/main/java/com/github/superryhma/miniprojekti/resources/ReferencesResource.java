@@ -44,6 +44,12 @@ public class ReferencesResource {
     }
 
     @GET
+    @Path("/references.bib")
+    public Response getReferencesAsBiBTeXFile() {
+        return getReferencesAsBiBTeX();
+    }
+
+    @GET
     @Path("/{id}")
     public Response getReferenceById(@PathParam("id") int id) {
         Reference ref = referenceDAO.getReferenceById(id);
