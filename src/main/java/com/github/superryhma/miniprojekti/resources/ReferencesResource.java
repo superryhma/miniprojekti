@@ -43,6 +43,7 @@ public class ReferencesResource {
 
     @GET
     @Path("/references.bib")
+    @Produces("text/x-bibtex")
     public Response getReferencesAsBiBTeXFile() {
         return getReferencesAsBiBTeX();
     }
