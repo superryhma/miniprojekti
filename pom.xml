@@ -31,6 +31,26 @@
                         <contextPath>/</contextPath>
                     </webAppConfig>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                            <daemon>true</daemon>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.flywaydb</groupId>
@@ -179,6 +199,12 @@
             <artifactId>rest-assured</artifactId>
             <version>${rest-assured.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy.modules.http-builder</groupId>
+            <artifactId>http-builder</artifactId>
+            <version>0.7.1</version>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -196,7 +222,7 @@
 
     <properties>
         <jersey.version>2.17</jersey.version>
-        <jetty.version>7.0.0.pre5</jetty.version>
+        <jetty.version>7.6.16.v20140903</jetty.version>
         <json.version>20141113</json.version>
         <javalite.version>1.4.9</javalite.version>
         <rest-assured.version>2.4.1</rest-assured.version>
