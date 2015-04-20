@@ -1,7 +1,31 @@
+import groovyx.net.http.RESTClient
+import static groovyx.net.http.ContentType.*
+
 description 'User can add inproceedings references'
 
-scenario "user adds inproceedings with correct fields", {
-    given 'POST to /api/reference/ arrives'
-    when 'data in json are correct inproceedings data'
-    then 'reference is added to db correctly'
+scenario 'User adds an inproceedings', {
+    given 'Valid inproceedings reference', {
+        data = [
+                name  : "an-inproceedings",
+                type  : "inproceedings",
+                fields: [
+                        author   : "a",
+                        title    : "a",
+                        booktitle: "a",
+                        year     : "1",
+                ],
+                tags  : []
+        ]
+        http = new RESTClient('http://localhost:8080/')
+    }
+    when 'The inproceedings is posted', {
+        response = http.post(path: "api/references",
+                body: data,
+                requestContentType: JSON)
+    }
+    then 'The response is OK!', {
+        assert response.status == 200
+        assert response.data.success
+        assert response.data.id != null
+    }
 }

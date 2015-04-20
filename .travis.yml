@@ -6,8 +6,8 @@ addons:
 install:
   - mvn clean
 before_script:
-  - psql -c 'create role miniprojekti with createdb login;' -U postgres
-  - psql -c 'create database miniprojekti;' -U miniprojekti
+  - createuser miniprojekti -d -U postgres
+  - createdb miniprojekti -U postgres -O miniprojekti
   - mvn flyway:migrate
 script:
   - mvn integration-test

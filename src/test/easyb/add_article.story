@@ -1,30 +1,28 @@
-import groovy.json.*
 import groovyx.net.http.RESTClient
-import jdk.nashorn.internal.parser.JSONParser
 import static groovyx.net.http.ContentType.*
 
 description 'User can add article references'
 
-scenario 'User adds a article', {
+scenario 'User adds an article', {
     given 'Valid article reference', {
-        json = JsonOutput.toJson([
-                name: "a1",
-                type: "article",
+        data = [
+                name  : "an-article",
+                type  : "article",
                 fields: [
-                    author: "a",
-                    title: "a",
-                    journal: "a",
-                    year: "1",
-                    volume: "1"
+                        author : "a",
+                        title  : "a",
+                        journal: "a",
+                        year   : "1",
+                        volume : "1"
                 ],
-                tags: []
-        ])
+                tags  : []
+        ]
         http = new RESTClient('http://localhost:8080/')
     }
     when 'The reference is posted', {
         response = http.post(path: "api/references",
-                             body: json,
-                             requestContentType: JSON)
+                body: data,
+                requestContentType: JSON)
     }
     then 'The response is OK!', {
         assert response.status == 200
