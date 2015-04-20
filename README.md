@@ -1,4 +1,4 @@
-# miniprojekti
+# miniprojekti [![Build Status](https://travis-ci.org/superryhma/miniprojekti.svg?branch=master)](https://travis-ci.org/superryhma/miniprojekti)
 
 ## settings for local db
 
