@@ -1,30 +1,38 @@
 import groovyx.net.http.RESTClient
 import static groovyx.net.http.ContentType.*
 
-description 'User can remove references'
+description 'User can remove added references'
 
-scenario 'User delete a article', {
-    given 'Delete existing article reference', {
+scenario 'User adds a book and then deletes it', {
+    given 'Valid book reference', {
         data = [
-                name  : "an-article",
-                type  : "article",
+                name  : "to-be-deleted",
+                type  : "book",
                 fields: [
-                        author : "a",
-                        title  : "a",
-                        journal: "a",
-                        year   : "1",
-                        volume : "1"
+                        author   : "a",
+                        title    : "a",
+                        publisher: "a",
+                        year     : "1",
                 ],
                 tags  : []
         ]
         http = new RESTClient('http://localhost:8080/')
+    }
+    when 'The book is posted', {
         response = http.post(path: "api/references",
-                    body: data,
-                    requestContentType: JSON)
+                body: data,
+                requestContentType: JSON)
     }
-    when 'The book is deleted', {
-        response = http.delete(path: "api/references/" + response.data.id)
+    then 'The response is OK!', {
+        assert response.status == 200
+        assert response.data.success
+        assert response.data.id != null
     }
+    and
+    when 'The book is removed', {
+        response = http.delete(path: "/api/references/" + response.data.id)
+    }
+    and
     then 'The response is OK!', {
         assert response.status == 200
         assert response.data.success
