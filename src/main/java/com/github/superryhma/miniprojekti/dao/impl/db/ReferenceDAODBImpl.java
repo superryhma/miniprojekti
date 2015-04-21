@@ -53,7 +53,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
                 .getString("name"), pr.getString("bibtextname"), new Date(pr
                 .getTimestamp("created_at").getTime()), new Date(pr
                 .getTimestamp("created_at").getTime()), attributesSet, tagsSet);
-        reference.setId((Integer) pr.getId());
+        reference.setId((pr.getLongId()).intValue());
         Dbc.close();
         return reference;
     }
@@ -65,7 +65,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         insertReference(reference, r);
         insertAttributes(reference, r);
         insertTags(reference, r);
-        reference.setId((Integer)r.getId());
+        reference.setId(((Long)r.getId()).intValue());
         Dbc.close();
         return reference;
     }

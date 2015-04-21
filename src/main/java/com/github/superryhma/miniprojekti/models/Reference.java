@@ -101,6 +101,7 @@ public class Reference {
         }
         jobj.put("fields", attrs);
         jobj.put("tags", new ArrayList<>(getTags()));
+        jobj.put("success", true);
         return jobj;
     }
 
