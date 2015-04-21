@@ -195,12 +195,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.codehaus.groovy.modules.http-builder</groupId>
             <artifactId>http-builder</artifactId>
             <version>0.7.1</version>
@@ -225,7 +219,6 @@
         <jetty.version>7.6.16.v20140903</jetty.version>
         <json.version>20141113</json.version>
         <javalite.version>1.4.9</javalite.version>
-        <rest-assured.version>2.4.1</rest-assured.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
         <org.springframework.version>3.1.1.RELEASE</org.springframework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
