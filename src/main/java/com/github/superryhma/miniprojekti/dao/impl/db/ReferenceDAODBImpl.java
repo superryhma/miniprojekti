@@ -85,8 +85,10 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     public boolean deleteReference(int id) {
         Dbc.open();
         ProjectReference pr = ProjectReference.findFirst("id = ?", id);
+        Dbc.close();
         deleteTags(pr);
         deleteAttributes(pr);
+        Dbc.open();
         pr.delete();
         Dbc.close();
         return true;
