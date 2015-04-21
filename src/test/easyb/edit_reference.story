@@ -1,42 +1,24 @@
 import groovyx.net.http.RESTClient
 import static groovyx.net.http.ContentType.*
 
-description 'User can edit references'
+description 'User can edit added references'
 
-scenario 'User edits an reference', {
-    given 'Valid article reference in database', {
+scenario 'User adds a book and then modifies it', {
+    given 'Valid book reference', {
         data = [
-                name  : "editable-article",
-                type  : "article",
+                name  : "to-be-modified",
+                type  : "book",
                 fields: [
-                        author : "a",
-                        title  : "a",
-                        journal: "a",
-                        year   : "1",
-                        volume : "1"
+                        author   : "a",
+                        title    : "a",
+                        publisher: "a",
+                        year     : "1",
                 ],
                 tags  : []
         ]
         http = new RESTClient('http://localhost:8080/')
-        id = http.post(path: "api/references",
-                body: data,
-                requestContentType: JSON).data.id
     }
-    when 'The reference is edited', {
-        data = [
-                name  : "everything-changes",
-                type  : "article",
-                id    : id,
-                fields: [
-                        author : "b",
-                        title  : "b",
-                        journal: "b",
-                        year   : "2",
-                        volume : "2"
-                ],
-                tags  : ["tag"]
-        ]
-        http = new RESTClient('http://localhost:8080/')
+    when 'The book is posted', {
         response = http.post(path: "api/references",
                 body: data,
                 requestContentType: JSON)
@@ -45,5 +27,32 @@ scenario 'User edits an reference', {
         assert response.status == 200
         assert response.data.success
         assert response.data.id != null
+        originalid = response.data.id
+    }
+    and
+    given "A valid modification is given", {
+        data = [
+                name  : "to-be-modified",
+                type  : "book",
+                fields: [
+                        author   : "b",
+                        title    : "b",
+                        publisher: "b",
+                        year     : "1",
+                ],
+                tags  : []
+        ]
+    }
+    and
+    when 'The book is modified', {
+        response = http.put(path: "/api/references/" + response.data.id,
+                body: data,
+                requestContentType: JSON)
+    }
+    and
+    then 'The response is OK!', {
+        assert response.status == 200
+        assert response.data.success
+        assert response.data.id = originalid
     }
 }
