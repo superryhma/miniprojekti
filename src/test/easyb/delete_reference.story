@@ -30,7 +30,7 @@ scenario 'User adds a book and then deletes it', {
     }
     and
     when 'The book is removed', {
-        response = http.delete(path: "/api/references/" + response.data.id)
+        response = http.delete(path: "/api/references/" + originalid)
     }
     and
     then 'The response is OK!', {
