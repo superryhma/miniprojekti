@@ -65,6 +65,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         insertReference(reference, r);
         insertAttributes(reference, r);
         insertTags(reference, r);
+        reference.setId((Integer)r.getId());
         Dbc.close();
         return reference;
     }
