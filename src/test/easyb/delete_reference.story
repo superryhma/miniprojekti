@@ -27,6 +27,7 @@ scenario 'User adds a book and then deletes it', {
         assert response.status == 200
         assert response.data.success
         assert response.data.id != null
+        originalid = response.data.id
     }
     and
     when 'The book is removed', {
