@@ -1,5 +1,7 @@
 # miniprojekti [![Build Status](https://travis-ci.org/superryhma/miniprojekti.svg?branch=master)](https://travis-ci.org/superryhma/miniprojekti)
 
+[Trello](https://trello.com/b/ri1n2SHn)
+
 ## settings for local db
 
 - User: miniprojekti
