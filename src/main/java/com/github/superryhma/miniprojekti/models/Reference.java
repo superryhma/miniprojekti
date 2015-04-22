@@ -3,10 +3,7 @@ package com.github.superryhma.miniprojekti.models;
 import com.github.superryhma.miniprojekti.utils.BibtexUtils;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class Reference {
 
@@ -101,6 +98,7 @@ public class Reference {
         }
         jobj.put("fields", attrs);
         jobj.put("tags", new ArrayList<>(getTags()));
+        jobj.put("success", true);
         return jobj;
     }
 
@@ -112,12 +110,15 @@ public class Reference {
         str.append('{');
         str.append(getBibtexName());
         str.append(",\n");
+        TreeMap<String, String> attrs = new TreeMap<>();
+        for(Attribute attr : getAttributes())
+            attrs.put(attr.getAttributeType(), attr.getValue());
         if(getAttributes().size() > 0) {
             str.append("  ");
             StringJoiner stringJoiner = new StringJoiner(",\n  ");
-            for(Attribute attribute : getAttributes()) {
-                stringJoiner.add(attribute.getAttributeType() +
-                        " = \"" + attribute.getValue() + "\"");
+            for(String attribute : attrs.keySet()) {
+                stringJoiner.add(attribute + " = \"" +
+                        attrs.get(attribute) + "\"");
             }
             str.append(stringJoiner);
             str.append("\n");

@@ -35,6 +35,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     @Override
     public Reference getReferenceById(int id) {
         Dbc.open();
+        System.out.println(id);
         ProjectReference pr = ProjectReference.findFirst("id = ?", id);
         List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
         Set<Attribute> attributesSet = new HashSet<Attribute>();
@@ -52,7 +53,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
                 .getString("name"), pr.getString("bibtextname"), new Date(pr
                 .getTimestamp("created_at").getTime()), new Date(pr
                 .getTimestamp("created_at").getTime()), attributesSet, tagsSet);
-        reference.setId((Integer) pr.getId());
+        reference.setId((pr.getLongId()).intValue());
         Dbc.close();
         return reference;
     }
@@ -64,6 +65,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         insertReference(reference, r);
         insertAttributes(reference, r);
         insertTags(reference, r);
+        reference.setId(((Long)r.getId()).intValue());
         Dbc.close();
         return reference;
     }

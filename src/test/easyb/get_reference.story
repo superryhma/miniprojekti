@@ -41,7 +41,7 @@ scenario 'User adds a book and then retrieves it', {
         assert response.data.name == "to-be-get"
         assert response.data.tags == ["tag"]
         assert response.data.type == "book"
-        assert response.fields == [
+        assert response.data.fields == [
                 author   : "a",
                 title    : "a",
                 publisher: "a",

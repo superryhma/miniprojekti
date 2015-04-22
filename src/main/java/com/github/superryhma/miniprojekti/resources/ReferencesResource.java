@@ -130,6 +130,7 @@ public class ReferencesResource {
         Reference ref1 = new Reference(ref.getString("type"),
                 ref.getString("name"),
                 Date.from(Instant.now()), null, attributes, tags);
+        ref1.setId(id);
         JSONObject jobj11 = getSuccessObject();
         jobj11.put("id", referenceDAO.updateReference(id, ref1).getId());
         return getResponse(jobj11, 200);
