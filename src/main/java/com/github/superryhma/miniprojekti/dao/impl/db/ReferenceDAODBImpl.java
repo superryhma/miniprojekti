@@ -118,9 +118,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         Dbc.open();
         pr.set("bibtextname", reference.getBibtexName());
         pr.set("project", Project.findFirst("name = ?", "miniproject").getId());
-        pr.set("reference_type_id",
-                ReferenceTypeDb.findFirst("name = ?", reference.getType())
-                        .getId());
+        pr.set("reference_type_id", ReferenceTypeDb.findFirst("name = ?", reference.getType()).getId());
         pr.save();
         Dbc.close();
     }
