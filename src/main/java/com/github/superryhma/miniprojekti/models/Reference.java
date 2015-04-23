@@ -1,8 +1,11 @@
 package com.github.superryhma.miniprojekti.models;
 
+import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
 import com.github.superryhma.miniprojekti.utils.BibtexUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.Instant;
 import java.util.*;
 
 public class Reference {
@@ -27,6 +30,51 @@ public class Reference {
 
     public Reference() {
 
+    }
+
+    public Reference(String json, ReferenceTypeDAO referenceTypeDAO) throws ReferenceException {
+        JSONObject reference = new JSONObject(json);
+        JSONObject refFields = reference.getJSONObject("fields");
+        Set<Attribute> attributes = new HashSet<>();
+        Set<String> requiredAttrs = new HashSet<>(referenceTypeDAO.getRequiredFields(reference.getString("type")));
+        Set<String> allAttrs = new HashSet<>(referenceTypeDAO.getOptionalFields(reference.getString("type")));
+        allAttrs.addAll(requiredAttrs);
+        for (String key : refFields.keySet()) {
+            if (requiredAttrs.contains(key)) {
+                requiredAttrs.remove(key);
+            }
+            if (!allAttrs.contains(key)) {
+                throw new ReferenceException("Invalid field '" + key + "'");
+            }
+            allAttrs.remove(key);
+            attributes.add(new Attribute(key, refFields.get(key).toString()));
+        }
+        if (requiredAttrs.size() > 0) {
+            if (requiredAttrs.size() > 1) {
+                List<String> fieldList = new ArrayList<>(requiredAttrs);
+                String str = "'" + fieldList.get(0) + "'";
+                for (int i = 1; i < fieldList.size() - 1; i++) {
+                    str += ", '" + fieldList.get(i) + "'";
+                }
+                str += " and '" + fieldList.get(fieldList.size() - 1) + "'";
+                throw new ReferenceException("Missing fields " + str);
+            }
+            throw new ReferenceException("Missing field '" + requiredAttrs.iterator().next() + "'");
+        }
+        Set<String> tags = new HashSet<>();
+        JSONArray arr = reference.getJSONArray("tags");
+        for (int i = 0; i < arr.length(); i++) {
+            tags.add(arr.getString(i));
+        }
+        if(!reference.has("name")) {
+            reference.put("name", "missing-name");
+        }
+        this.type = reference.getString("type");
+        this.bibtexName = reference.getString("name");
+        this.createdAt = Date.from(Instant.now());
+        this.updatedAt = null;
+        this.attributes = attributes;
+        this.tags = tags;
     }
 
     public int getId() {
@@ -125,5 +173,17 @@ public class Reference {
         }
         str.append('}');
         return BibtexUtils.escapeBiBTeXString(str.toString());
+    }
+
+    public class ReferenceException extends Throwable {
+        private String errorMessage;
+
+        public ReferenceException(String errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+
+        public String getErrorMessage() {
+            return errorMessage;
+        }
     }
 }
