@@ -37,6 +37,20 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         Dbc.open();
         System.out.println(id);
         ProjectReference pr = ProjectReference.findFirst("id = ?", id);
+
+        Set<Attribute> attributesSet = loadAttributes(pr);
+        Set<String> tagsSet = loadTags(pr);
+        Date dateCreated = new Date(pr.getTimestamp("created_at").getTime());
+        Date dateUpdated = new Date(pr.getTimestamp("created_at").getTime());
+        
+        Reference reference = new Reference(pr.parent(ReferenceTypeDb.class)
+                .getString("name"), pr.getString("bibtextname"), dateCreated, dateUpdated, attributesSet, tagsSet);
+        reference.setId((pr.getLongId()).intValue());
+        Dbc.close();
+        return reference;
+    }
+    
+    private Set<Attribute> loadAttributes(ProjectReference pr){
         List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
         Set<Attribute> attributesSet = new HashSet<Attribute>();
         for (AttributeDb attribute : attributesList) {
@@ -44,18 +58,18 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
                     AttributeType.class).getString("name"), attribute
                     .getString("value")));
         }
+        
+        return attributesSet;
+    }
+        
+    private Set<String> loadTags(ProjectReference pr){
         List<Tag> tagsList = pr.getAll(Tag.class);
         Set<String> tagsSet = new HashSet<String>();
         for (Tag tag : tagsList) {
             tagsSet.add(tag.getString("value"));
         }
-        Reference reference = new Reference(pr.parent(ReferenceTypeDb.class)
-                .getString("name"), pr.getString("bibtextname"), new Date(pr
-                .getTimestamp("created_at").getTime()), new Date(pr
-                .getTimestamp("created_at").getTime()), attributesSet, tagsSet);
-        reference.setId((pr.getLongId()).intValue());
-        Dbc.close();
-        return reference;
+        
+        return tagsSet;
     }
 
     @Override
