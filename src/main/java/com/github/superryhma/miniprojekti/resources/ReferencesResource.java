@@ -23,9 +23,10 @@ public class ReferencesResource {
     public Response getReferences() {
         JSONObject jobj = getSuccessObject();
         JSONArray jarr = new JSONArray();
-        for (Reference ref : referenceDAO.getReferences()) {
-            jarr.put(ref.toJSON());
-        }
+        referenceDAO.getReferences().stream()
+                .map( ref -> ref.toJSON())
+                .forEach(jarr::put);
+        
         jobj.put("references", jarr);
         return getResponse(jobj, 200);
     }
@@ -49,8 +50,9 @@ public class ReferencesResource {
         Reference ref = referenceDAO.getReferenceById(id);
         if (ref != null) {
             return getResponse(ref.toJSON(), 200);
+        }else{
+            return getResponse(referenceNotFound(), 404);
         }
-        return getResponse(referenceNotFound(), 404);
     }
 
     @GET
@@ -60,8 +62,9 @@ public class ReferencesResource {
         Reference ref = referenceDAO.getReferenceById(id);
         if (ref != null) {
             return getResponse(ref.toBiBTeX(), 200);
+        }else{
+            return getResponse(referenceNotFound(), 404);
         }
-        return getResponse(referenceNotFound(), 404);
     }
 
     @POST
@@ -76,7 +79,6 @@ public class ReferencesResource {
         JSONObject jobj = getSuccessObject();
         try {
             jobj.put("id", referenceDAO.addReference(ref).getId());
-        // } catch (PSQLException e) {
         } catch (Exception e) {
             return getResponse(getErrorObject(400, e.getMessage()), 400);
         }

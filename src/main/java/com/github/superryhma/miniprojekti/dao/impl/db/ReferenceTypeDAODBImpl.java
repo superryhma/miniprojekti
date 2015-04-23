@@ -1,7 +1,5 @@
 package com.github.superryhma.miniprojekti.dao.impl.db;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
