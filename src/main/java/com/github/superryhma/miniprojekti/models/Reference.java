@@ -35,32 +35,8 @@ public class Reference {
     public Reference(String json, ReferenceTypeDAO referenceTypeDAO) throws ReferenceException {
         JSONObject reference = new JSONObject(json);
         JSONObject refFields = reference.getJSONObject("fields");
-        Set<Attribute> attributes = new HashSet<>();
-        Set<String> requiredAttrs = new HashSet<>(referenceTypeDAO.getRequiredFields(reference.getString("type")));
-        Set<String> allAttrs = new HashSet<>(referenceTypeDAO.getOptionalFields(reference.getString("type")));
-        allAttrs.addAll(requiredAttrs);
-        for (String key : refFields.keySet()) {
-            if (requiredAttrs.contains(key)) {
-                requiredAttrs.remove(key);
-            }
-            if (!allAttrs.contains(key)) {
-                throw new ReferenceException("Invalid field '" + key + "'");
-            }
-            allAttrs.remove(key);
-            attributes.add(new Attribute(key, refFields.get(key).toString()));
-        }
-        if (requiredAttrs.size() > 0) {
-            if (requiredAttrs.size() > 1) {
-                List<String> fieldList = new ArrayList<>(requiredAttrs);
-                String str = "'" + fieldList.get(0) + "'";
-                for (int i = 1; i < fieldList.size() - 1; i++) {
-                    str += ", '" + fieldList.get(i) + "'";
-                }
-                str += " and '" + fieldList.get(fieldList.size() - 1) + "'";
-                throw new ReferenceException("Missing fields " + str);
-            }
-            throw new ReferenceException("Missing field '" + requiredAttrs.iterator().next() + "'");
-        }
+        processAttributes(reference, refFields, referenceTypeDAO);
+        
         Set<String> tags = new HashSet<>();
         JSONArray arr = reference.getJSONArray("tags");
         for (int i = 0; i < arr.length(); i++) {
@@ -73,8 +49,44 @@ public class Reference {
         this.bibtexName = reference.getString("name");
         this.createdAt = Date.from(Instant.now());
         this.updatedAt = null;
-        this.attributes = attributes;
         this.tags = tags;
+    }
+    
+    private void processAttributes(JSONObject reference, JSONObject refFields, ReferenceTypeDAO referenceTypeDAO) throws ReferenceException{
+        Set<Attribute> attributes = new HashSet<>();
+        Set<String> requiredAttrs = new HashSet<>(referenceTypeDAO.getRequiredFields(reference.getString("type")));
+        Set<String> allAttrs = new HashSet<>(referenceTypeDAO.getOptionalFields(reference.getString("type")));
+        allAttrs.addAll(requiredAttrs);
+        
+        for (String key : refFields.keySet()) {
+            if (requiredAttrs.contains(key)) {
+                requiredAttrs.remove(key);
+            }
+            if (!allAttrs.contains(key)) {
+                throw new ReferenceException("Invalid field '" + key + "'");
+            }
+            allAttrs.remove(key);
+            attributes.add(new Attribute(key, refFields.get(key).toString()));
+        }
+        if (requiredAttrs.size() > 0) {
+            if (requiredAttrs.size() > 1) {
+                String str = enumerateWords(requiredAttrs);
+                throw new ReferenceException("Missing fields " + str);
+            }
+            throw new ReferenceException("Missing field '" + requiredAttrs.iterator().next() + "'");
+        }
+        
+        this.attributes = attributes;
+
+    }
+    
+    private String enumerateWords(Collection<String> words){
+        List<String> fieldList = new ArrayList<>(words);
+        String str = "'" + fieldList.get(0) + "'";
+        for (int i = 1; i < fieldList.size() - 1; i++) {
+            str += ", '" + fieldList.get(i) + "'";
+        }
+        return str + " and '" + fieldList.get(fieldList.size() - 1) + "'";
     }
 
     public int getId() {
