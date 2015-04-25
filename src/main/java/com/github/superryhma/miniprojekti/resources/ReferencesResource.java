@@ -69,9 +69,11 @@ public class ReferencesResource {
     
     @GET
     @Path("/namesuggestion")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getNameSuggestion(String authorAndYear) {
-    	return null;
+    public Response getNameSuggestion(@QueryParam("author") String author, @QueryParam("year") String year) {
+        JSONObject jobj1 = new JSONObject();
+        jobj1.put("success", true);
+        jobj1.put("name", "Luukkainen1997");
+        return getResponse(jobj1, 200);
     }
 
     @POST
