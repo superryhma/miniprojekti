@@ -175,4 +175,5 @@ public class ReferencesResource {
 		JSONObject jobj = getErrorObject(404, "Reference not found");
 		return jobj;
 	}
+
 }
