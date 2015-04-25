@@ -170,6 +170,12 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jsp-2.1</artifactId>
+			<version>6.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<reporting>
