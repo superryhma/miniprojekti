@@ -66,6 +66,13 @@ public class ReferencesResource {
             return getResponse(referenceNotFound(), 404);
         }
     }
+    
+    @GET
+    @Path("/namesuggestion")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getNameSuggestion(String authorAndYear) {
+    	return null;
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
