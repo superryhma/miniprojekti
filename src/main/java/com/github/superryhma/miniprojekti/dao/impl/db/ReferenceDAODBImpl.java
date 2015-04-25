@@ -35,10 +35,10 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     @Override
 	public List<Reference> getReferencesByName(String name) {
     	Dbc.open();
-    	List<ProjectReference> r = ProjectReference.where("bibtextname like '?%'", name);
+    	List<ProjectReference> r = ProjectReference.where("bibtextname like '" + name + "%'");
     	List<Reference> references = new ArrayList<Reference>();
         for (ProjectReference reference : r) {
-            references.add(getReferenceById(reference.getInteger("id")));
+            references.add(getReferenceById((Integer)reference.getId()));
         }
         Dbc.close();
     	return references;

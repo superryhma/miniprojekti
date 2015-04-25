@@ -74,7 +74,7 @@ public class ReferencesResource {
 	@GET
 	@Path("/namesuggestion")
 	public Response getNameSuggestion(@QueryParam("author") String author,
-			@QueryParam("year") int year) {
+			@QueryParam("year") String year) {
 		try {
 			String firstLastName = author.substring(0, author.indexOf(','))
 					.replaceAll("\\s+", "");
@@ -91,6 +91,7 @@ public class ReferencesResource {
 			}
 			return getResponse(jobj, 200);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return getResponse(
 					getErrorObject(500, "Name suggestion creation failed"), 500);
 		}
