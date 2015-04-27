@@ -53,7 +53,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         Set<Attribute> attributesSet = loadAttributes(pr);
         Set<String> tagsSet = loadTags(pr);
         Date dateCreated = new Date(pr.getTimestamp("created_at").getTime());
-        Date dateUpdated = new Date(pr.getTimestamp("created_at").getTime());
+        Date dateUpdated = new Date(pr.getTimestamp("updated_at").getTime());
         
         Reference reference = new Reference(pr.parent(ReferenceTypeDb.class)
                 .getString("name"), pr.getString("bibtextname"), dateCreated, dateUpdated, attributesSet, tagsSet);
