@@ -63,15 +63,9 @@ public class Reference {
 		boolean found = false;
 		Sequence sequence = new Sequence();
 		String endingCandidate = "";
-		long limit = 1000000;
-		long i = 0;
 		while (!found) {
-			i++;
 			endingCandidate = sequence.next();
 			if (!nameEndings.contains(endingCandidate)) {
-				found = true;
-			}
-			if (i > limit) {
 				found = true;
 			}
 		}
