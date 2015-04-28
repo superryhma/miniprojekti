@@ -3,24 +3,25 @@ package com.github.superryhma.miniprojekti.utils;
 import com.google.common.collect.AbstractIterator;
 
 public class Sequence extends AbstractIterator<String> {
-    private int now;
-    private char[] vs;
-    
+    private int current;
+    private final int CHARSET_LENGTH = 'z' - 'a' + 1;
+
     public Sequence() {
-        super();
-        vs = new char['z' - 'a' + 1];
-        for(char i='a'; i<='z';i++) vs[i - 'a'] = i;
-        now = 0;
+        current = 0;
     }
 
-    private StringBuilder alpha(int i){
-        assert i > 0;
-        char r = vs[--i % vs.length];
-        int n = i / vs.length;
-        return n == 0 ? new StringBuilder().append(r) : alpha(n).append(r);
-    }
-
-    @Override protected String computeNext() {
-        return alpha(++now).toString();
+    @Override
+    public String computeNext() {
+        int i = current;
+        current++;
+        if(current == 1)
+            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        while(i > 0) {
+            i--;
+            stringBuilder.append((char)(i % CHARSET_LENGTH + 'a'));
+            i /= CHARSET_LENGTH;
+        }
+        return stringBuilder.reverse().toString();
     }
 }

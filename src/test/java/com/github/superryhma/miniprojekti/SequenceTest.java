@@ -46,6 +46,7 @@ public class SequenceTest {
     
     @Test
     public void firstCharacters(){
+        Assert.assertEquals("", sequence.next());
         for(char c = 'a'; c <= 'z'; c++){
             String result = sequence.next();
             Assert.assertEquals("" + c, result);
@@ -54,12 +55,15 @@ public class SequenceTest {
     
     @Test
     public void secondCharacters(){
-        for(int i = 0; i < 2; i++){
-            for(char c = 'a'; c <= 'z'; c++){
-                sequence.next();
-            }
+        sequence.next();
+        for(char c = 'a'; c <= 'z'; c++){
+            sequence.next();
         }
-        
+
+        for(char c = 'a'; c <= 'z'; c++){
+            String result = sequence.next();
+            Assert.assertEquals("a" + c, result);
+        }
         for(char c = 'a'; c <= 'z'; c++){
             String result = sequence.next();
             Assert.assertEquals("b" + c, result);
