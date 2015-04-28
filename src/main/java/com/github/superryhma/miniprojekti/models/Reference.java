@@ -50,7 +50,7 @@ public class Reference {
         }
         this.type = reference.getString("type");
         for(char c : reference.getString("name").toCharArray()) {
-            if (!Character.isLetterOrDigit(c) && c != '-') {
+            if (c == ' ') {
                 throw new ReferenceException("BiBTeX name cannot contain spaces or special characters");
             }
         }
