@@ -49,3 +49,18 @@ scenario 'User adds a book and then retrieves it', {
         ]
     }
 }
+
+scenario 'User tries to get unexisting reference', {
+    given 'invalid reference id', {
+        originalid = 123123
+        http = new RESTClient('http://localhost:8080/')
+    }
+    when 'get is posted', {
+    	http.handler.failure = { resp, data -> resp.setData(data); return resp }
+        response = http.get(path: "/api/references/" + originalid)
+    }
+    then 'The response is OK!', {
+        assert response.status == 404
+        assert !response.data.success
+    }
+}

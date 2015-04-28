@@ -5,12 +5,14 @@ import com.github.superryhma.miniprojekti.dao.ReferenceTypeDAO;
 import com.github.superryhma.miniprojekti.dao.impl.db.ReferenceDAODBImpl;
 import com.github.superryhma.miniprojekti.dao.impl.db.ReferenceTypeDAODBImpl;
 import com.github.superryhma.miniprojekti.models.Reference;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +27,7 @@ public class ReferencesResource {
     public Response getReferences() {
         JSONObject jobj = getSuccessObject();
         JSONArray jarr = new JSONArray();
-        referenceDAO.getReferences().stream()
-                .map(ref -> ref.toJSON())
+        referenceDAO.getReferences().stream().map(ref -> ref.toJSON())
                 .forEach(jarr::put);
 
         jobj.put("references", jarr);
@@ -50,10 +51,10 @@ public class ReferencesResource {
     @GET
     @Path("/{id}")
     public Response getReferenceById(@PathParam("id") int id) {
-        Reference ref = referenceDAO.getReferenceById(id);
-        if (ref != null) {
+        try {
+            Reference ref = referenceDAO.getReferenceById(id);
             return getResponse(ref.toJSON(), 200);
-        } else {
+        } catch (Exception e) {
             return getResponse(referenceNotFound(), 404);
         }
     }
@@ -83,8 +84,10 @@ public class ReferencesResource {
             if (references.isEmpty()) {
                 jobj.put("name", firstLastName + year);
             } else {
-                jobj.put("name", Reference.getNameSuggestion(references.stream().map(r -> r.getBibtexName())
-                        .collect(Collectors.toList()), firstLastName + year));
+                jobj.put("name", Reference.getNameSuggestion(
+                        references.stream().map(r -> r.getBibtexName())
+                                .collect(Collectors.toList()), firstLastName
+                                + year));
             }
             return getResponse(jobj, 200);
         } catch (Exception e) {
