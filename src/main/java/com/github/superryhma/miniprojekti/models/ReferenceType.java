@@ -4,11 +4,8 @@ import java.util.Set;
 
 public class ReferenceType {
     private String name;
-    private Set<String> requiredAttributes;
-    private Set<String> optionalAttributes;
-
-    public ReferenceType() {
-    }
+    private final Set<String> requiredAttributes;
+    private final Set<String> optionalAttributes;
 
     public ReferenceType(String name, Set<String> requiredAttributes, Set<String> optionalAttributes) {
         this.name = name;
@@ -28,16 +25,8 @@ public class ReferenceType {
         return requiredAttributes;
     }
 
-    public void setRequiredAttributes(Set<String> requiredAttributes) {
-        this.requiredAttributes = requiredAttributes;
-    }
-
     public Set<String> getOptionalAttributes() {
         return optionalAttributes;
-    }
-
-    public void setOptionalAttributes(Set<String> optionalAttributes) {
-        this.optionalAttributes = optionalAttributes;
     }
 
     @Override

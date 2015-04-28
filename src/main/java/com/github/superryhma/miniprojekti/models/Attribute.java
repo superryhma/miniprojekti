@@ -2,31 +2,20 @@ package com.github.superryhma.miniprojekti.models;
 
 public class Attribute {
 
-    private String attributeType;
-    private String value;
+    private final String attributeType;
+    private final String value;
 
     public Attribute(String attributeType, String value) {
         this.attributeType = attributeType;
         this.value = value;
     }
 
-    public Attribute() {
-    }
-
     public String getAttributeType() {
         return attributeType;
     }
 
-    public void setAttributeType(String attributeType) {
-        this.attributeType = attributeType;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     @Override
