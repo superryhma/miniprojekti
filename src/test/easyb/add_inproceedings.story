@@ -29,3 +29,30 @@ scenario 'User adds an inproceedings', {
         assert response.data.id != null
     }
 }
+
+scenario 'User adds an inproceedings with name already in use', {
+    given 'Valid book reference with name already in use', {
+        data = [
+                name  : "an-inproceedings",
+                type  : "inproceedings",
+                fields: [
+                        author   : "a",
+                        title    : "a",
+                        booktitle: "a",
+                        year     : "1",
+                ],
+                tags  : []
+        ]
+        http = new RESTClient('http://localhost:8080/')
+        http.handler.failure = { resp, data -> resp.setData(data); return resp }
+    }	
+    when 'The reference is posted', {
+        response = http.post(path: "api/references",
+                body: data,
+                requestContentType: JSON)
+    }
+    then 'The response is OK!', {
+        assert response.status == 400
+        assert !response.data.success
+    }
+}
