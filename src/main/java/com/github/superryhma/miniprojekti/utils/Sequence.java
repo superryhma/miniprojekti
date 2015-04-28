@@ -12,13 +12,9 @@ public class Sequence extends AbstractIterator<String> {
 
     @Override
     public String computeNext() {
-        int i = current;
-        current++;
-        if(current == 1)
-            return "";
+        int i = current++;
         StringBuilder stringBuilder = new StringBuilder();
-        while(i > 0) {
-            i--;
+        while(i-- > 0) {
             stringBuilder.append((char)(i % CHARSET_LENGTH + 'a'));
             i /= CHARSET_LENGTH;
         }
