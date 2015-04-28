@@ -6,8 +6,15 @@ import java.util.Map;
 public class BibtexUtils {
     private static final Map<Character, String> CHARACTER_MAP = new HashMap<Character, String>() {
         {
+            put('å', "\\aa");
             put('ä', "\\\"{a}");
             put('ö', "\\\"{o}");
+            put('ø', "\\o");
+
+            put('Å', "\\AA");
+            put('Ä', "\\\"{A}");
+            put('Ö', "\\\"{O}");
+            put('Ø', "\\O");
         }
     };
 

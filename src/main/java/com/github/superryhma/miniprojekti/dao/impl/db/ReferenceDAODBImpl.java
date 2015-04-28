@@ -1,87 +1,77 @@
 package com.github.superryhma.miniprojekti.dao.impl.db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.AttributeDb;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.AttributeType;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.Project;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.ProjectReference;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.ReferenceTypeDb;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.Tag;
+import com.github.superryhma.miniprojekti.dao.impl.db.models.*;
 import com.github.superryhma.miniprojekti.dbc.Dbc;
 import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
+
+import java.util.*;
 
 public class ReferenceDAODBImpl implements ReferenceDAO {
 
     @Override
     public List<Reference> getReferences() {
         Dbc.open();
-        List<ProjectReference> r = ProjectReference.findAll();
-        List<Reference> references = new ArrayList<Reference>();
-        for (ProjectReference reference : r) {
+        List<ProjectReference> projectReferences = ProjectReference.findAll();
+        List<Reference> references = new ArrayList<>();
+        for (ProjectReference reference : projectReferences) {
             references.add(getReferenceById(reference.getInteger("id")));
         }
-
         Dbc.close();
         return references;
     }
-    
+
     @Override
-	public List<Reference> getReferencesByName(String name) {
-    	Dbc.open();
-    	List<ProjectReference> r = ProjectReference.where("bibtextname like '" + name + "%'");
-    	List<Reference> references = new ArrayList<Reference>();
-        for (ProjectReference reference : r) {
-            references.add(getReferenceById((Integer)reference.getId()));
+    public List<Reference> getReferencesByName(String name) {
+        Dbc.open();
+        List<ProjectReference> projectReferences = ProjectReference.where("bibtextname like '" + name + "%'");
+        List<Reference> references = new ArrayList<Reference>();
+        for (ProjectReference reference : projectReferences) {
+            references.add(getReferenceById((Integer) reference.getId()));
         }
         Dbc.close();
-    	return references;
-	}
+        return references;
+    }
 
     @Override
     public Reference getReferenceById(int id) {
         Dbc.open();
-        System.out.println(id);
         ProjectReference pr = ProjectReference.findFirst("id = ?", id);
 
         Set<Attribute> attributesSet = loadAttributes(pr);
         Set<String> tagsSet = loadTags(pr);
+        String name = pr.parent(ReferenceTypeDb.class).getString("name");
+        String bibtexName = pr.getString("bibtextname");
         Date dateCreated = new Date(pr.getTimestamp("created_at").getTime());
         Date dateUpdated = new Date(pr.getTimestamp("updated_at").getTime());
-        
-        Reference reference = new Reference(pr.parent(ReferenceTypeDb.class)
-                .getString("name"), pr.getString("bibtextname"), dateCreated, dateUpdated, attributesSet, tagsSet);
+
+        Reference reference = new Reference(name, bibtexName, dateCreated, dateUpdated, attributesSet, tagsSet);
         reference.setId((pr.getLongId()).intValue());
         Dbc.close();
         return reference;
     }
-    
-    private Set<Attribute> loadAttributes(ProjectReference pr){
-        List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
-        Set<Attribute> attributesSet = new HashSet<Attribute>();
-        for (AttributeDb attribute : attributesList) {
-            attributesSet.add(new Attribute(attribute.parent(
-                    AttributeType.class).getString("name"), attribute
-                    .getString("value")));
+
+    private Set<Attribute> loadAttributes(ProjectReference pr) {
+        List<AttributeDb> attributes = pr.getAll(AttributeDb.class);
+        Set<Attribute> attributeSet = new HashSet<>();
+        for (AttributeDb attribute : attributes) {
+            String name = attribute.parent(AttributeType.class).getString("name");
+            String value = attribute.getString("value");
+            attributeSet.add(new Attribute(name, value));
         }
-        
-        return attributesSet;
+
+        return attributeSet;
     }
-        
-    private Set<String> loadTags(ProjectReference pr){
-        List<Tag> tagsList = pr.getAll(Tag.class);
-        Set<String> tagsSet = new HashSet<String>();
-        for (Tag tag : tagsList) {
-            tagsSet.add(tag.getString("value"));
+
+    private Set<String> loadTags(ProjectReference pr) {
+        List<Tag> tags = pr.getAll(Tag.class);
+        Set<String> tagSet = new HashSet<>();
+        for (Tag tag : tags) {
+            tagSet.add(tag.getString("value"));
         }
-        
-        return tagsSet;
+
+        return tagSet;
     }
 
     @Override
@@ -91,7 +81,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         insertReference(reference, r);
         insertAttributes(reference, r);
         insertTags(reference, r);
-        reference.setId(((Long)r.getId()).intValue());
+        reference.setId(r.getLongId().intValue());
         Dbc.close();
         return reference;
     }
@@ -124,8 +114,8 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 
     private void deleteAttributes(ProjectReference pr) {
         Dbc.open();
-        List<AttributeDb> a = pr.getAll(AttributeDb.class);
-        for (AttributeDb attribute : a) {
+        List<AttributeDb> attributes = pr.getAll(AttributeDb.class);
+        for (AttributeDb attribute : attributes) {
             attribute.delete();
         }
         Dbc.close();
@@ -133,8 +123,8 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 
     private void deleteTags(ProjectReference pr) {
         Dbc.open();
-        List<Tag> t = pr.getAll(Tag.class);
-        for (Tag tag : t) {
+        List<Tag> tags = pr.getAll(Tag.class);
+        for (Tag tag : tags) {
             pr.remove(tag);
         }
         Dbc.close();
@@ -161,15 +151,14 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
 
     private void insertAttributes(Reference r, ProjectReference pr) {
         Dbc.open();
-        AttributeDb a;
-        AttributeType at;
+        AttributeDb attributeDb;
+        AttributeType attributeType;
         for (Attribute attribute : r.getAttributes()) {
-            a = new AttributeDb();
-            a.set("project_reference_id", pr.getId());
-            a.set("value", attribute.getValue());
-            at = AttributeType.findFirst("name = ?",
-                    attribute.getAttributeType());
-            at.add(a);
+            attributeDb = new AttributeDb();
+            attributeDb.set("project_reference_id", pr.getId());
+            attributeDb.set("value", attribute.getValue());
+            attributeType = AttributeType.findFirst("name = ?", attribute.getAttributeType());
+            attributeType.add(attributeDb);
         }
         Dbc.close();
     }
