@@ -4,10 +4,13 @@ import com.google.common.collect.AbstractIterator;
 
 public class Sequence extends AbstractIterator<String> {
     private int now;
-    private static char[] vs;
-    static {
+    private char[] vs;
+    
+    public Sequence() {
+        super();
         vs = new char['z' - 'a' + 1];
         for(char i='a'; i<='z';i++) vs[i - 'a'] = i;
+        now = 0;
     }
 
     private StringBuilder alpha(int i){
