@@ -1,21 +1,12 @@
 package com.github.superryhma.miniprojekti.dao.impl.db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.superryhma.miniprojekti.dao.ReferenceDAO;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.AttributeDb;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.AttributeType;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.Project;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.ProjectReference;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.ReferenceTypeDb;
-import com.github.superryhma.miniprojekti.dao.impl.db.models.Tag;
+import com.github.superryhma.miniprojekti.dao.impl.db.models.*;
 import com.github.superryhma.miniprojekti.dbc.Dbc;
 import com.github.superryhma.miniprojekti.models.Attribute;
 import com.github.superryhma.miniprojekti.models.Reference;
+
+import java.util.*;
 
 public class ReferenceDAODBImpl implements ReferenceDAO {
 
@@ -31,18 +22,18 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         Dbc.close();
         return references;
     }
-    
+
     @Override
-	public List<Reference> getReferencesByName(String name) {
-    	Dbc.open();
-    	List<ProjectReference> r = ProjectReference.where("bibtextname like '" + name + "%'");
-    	List<Reference> references = new ArrayList<Reference>();
+    public List<Reference> getReferencesByName(String name) {
+        Dbc.open();
+        List<ProjectReference> r = ProjectReference.where("bibtextname like '" + name + "%'");
+        List<Reference> references = new ArrayList<Reference>();
         for (ProjectReference reference : r) {
-            references.add(getReferenceById((Integer)reference.getId()));
+            references.add(getReferenceById((Integer) reference.getId()));
         }
         Dbc.close();
-    	return references;
-	}
+        return references;
+    }
 
     @Override
     public Reference getReferenceById(int id) {
@@ -54,15 +45,15 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         Set<String> tagsSet = loadTags(pr);
         Date dateCreated = new Date(pr.getTimestamp("created_at").getTime());
         Date dateUpdated = new Date(pr.getTimestamp("updated_at").getTime());
-        
+
         Reference reference = new Reference(pr.parent(ReferenceTypeDb.class)
                 .getString("name"), pr.getString("bibtextname"), dateCreated, dateUpdated, attributesSet, tagsSet);
         reference.setId((pr.getLongId()).intValue());
         Dbc.close();
         return reference;
     }
-    
-    private Set<Attribute> loadAttributes(ProjectReference pr){
+
+    private Set<Attribute> loadAttributes(ProjectReference pr) {
         List<AttributeDb> attributesList = pr.getAll(AttributeDb.class);
         Set<Attribute> attributesSet = new HashSet<Attribute>();
         for (AttributeDb attribute : attributesList) {
@@ -70,17 +61,17 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
                     AttributeType.class).getString("name"), attribute
                     .getString("value")));
         }
-        
+
         return attributesSet;
     }
-        
-    private Set<String> loadTags(ProjectReference pr){
+
+    private Set<String> loadTags(ProjectReference pr) {
         List<Tag> tagsList = pr.getAll(Tag.class);
         Set<String> tagsSet = new HashSet<String>();
         for (Tag tag : tagsList) {
             tagsSet.add(tag.getString("value"));
         }
-        
+
         return tagsSet;
     }
 
@@ -91,7 +82,7 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
         insertReference(reference, r);
         insertAttributes(reference, r);
         insertTags(reference, r);
-        reference.setId(((Long)r.getId()).intValue());
+        reference.setId(((Long) r.getId()).intValue());
         Dbc.close();
         return reference;
     }

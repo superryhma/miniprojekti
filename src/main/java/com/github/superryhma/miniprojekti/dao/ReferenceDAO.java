@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReferenceDAO {
     List<Reference> getReferences();
-    
+
     List<Reference> getReferencesByName(String name);
 
     Reference getReferenceById(int id);
