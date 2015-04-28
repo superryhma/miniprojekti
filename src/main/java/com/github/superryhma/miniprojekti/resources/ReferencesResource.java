@@ -104,12 +104,16 @@ public class ReferencesResource {
 		try {
 			ref = new Reference(reference, referenceTypeDAO);
 		} catch (Reference.ReferenceException e) {
+		    System.out.println("1. virhe");
+		    e.printStackTrace();
 			return getResponse(getErrorObject(400, e.getErrorMessage()), 400);
 		}
 		JSONObject jobj = getSuccessObject();
 		try {
 			jobj.put("id", referenceDAO.addReference(ref).getId());
 		} catch (Exception e) {
+		    System.out.println("2. virhe");
+		    e.printStackTrace();
 			return getResponse(getErrorObject(400, e.getMessage()), 400);
 		}
 		return getResponse(jobj, 200);
