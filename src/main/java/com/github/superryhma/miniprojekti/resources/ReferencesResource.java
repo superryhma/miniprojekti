@@ -136,7 +136,11 @@ public class ReferencesResource {
     @DELETE
     @Path("/{id}")
     public Response deleteReferenceById(@PathParam("id") int id) {
-        if (!referenceDAO.deleteReference(id)) {
+        try {
+            if (!referenceDAO.deleteReference(id)) {
+                return getResponse(referenceNotFound(), 404);
+            }
+        } catch (Exception e) {
             return getResponse(referenceNotFound(), 404);
         }
         return getResponse(getSuccessObject(), 200);
