@@ -38,7 +38,6 @@ public class ReferenceDAODBImpl implements ReferenceDAO {
     @Override
     public Reference getReferenceById(int id) {
         Dbc.open();
-        System.out.println(id);
         ProjectReference pr = ProjectReference.findFirst("id = ?", id);
 
         Set<Attribute> attributesSet = loadAttributes(pr);
