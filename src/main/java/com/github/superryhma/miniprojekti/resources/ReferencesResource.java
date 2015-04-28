@@ -25,7 +25,8 @@ public class ReferencesResource {
     public Response getReferences() {
         JSONObject jobj = getSuccessObject();
         JSONArray jarr = new JSONArray();
-        referenceDAO.getReferences().stream().map(ref -> ref.toJSON())
+        referenceDAO.getReferences().stream()
+                .map(ref -> ref.toJSON())
                 .forEach(jarr::put);
 
         jobj.put("references", jarr);
@@ -116,7 +117,7 @@ public class ReferencesResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateReferenceById(String reference,
             @PathParam("id") int id) {
-        Reference ref = null;
+        Reference ref;
         try {
             ref = new Reference(reference, referenceTypeDAO);
         } catch (Reference.ReferenceException e) {
