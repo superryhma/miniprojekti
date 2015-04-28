@@ -43,12 +43,17 @@ public class Reference {
         Set<String> tags = new HashSet<>();
         JSONArray arr = reference.getJSONArray("tags");
         for (int i = 0; i < arr.length(); i++) {
-            tags.add(arr.getString(i));
+            tags.add(arr.getString(i).trim());
         }
         if (!reference.has("name")) {
             reference.put("name", "missing-name");
         }
         this.type = reference.getString("type");
+        for(char c : reference.getString("name").toCharArray()) {
+            if (!Character.isLetterOrDigit(c) && c != '-') {
+                throw new ReferenceException("BiBTeX name cannot contain spaces or special characters");
+            }
+        }
         this.bibtexName = reference.getString("name");
         this.createdAt = Date.from(Instant.now());
         this.updatedAt = null;
