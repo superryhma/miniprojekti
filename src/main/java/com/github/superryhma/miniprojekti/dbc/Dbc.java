@@ -14,4 +14,16 @@ public class Dbc {
             Base.close();
         }
     }
+    
+    public static void openTransaction() {
+        Base.openTransaction();
+    }
+    
+    public static void commitTransaction() {
+        Base.commitTransaction();
+    }
+    
+    public static void rollbackTransaction() {
+        Base.rollbackTransaction();
+    }
 }
