@@ -6,6 +6,9 @@ public class Attribute {
     private final String value;
 
     public Attribute(String attributeType, String value) {
+        if (attributeType == null || value == null) {
+            throw new IllegalArgumentException("Parameters cannot be null");
+        }
         this.attributeType = attributeType;
         this.value = value;
     }
@@ -29,15 +32,13 @@ public class Attribute {
 
         Attribute attribute = (Attribute) o;
 
-        if (attributeType != null) {
-            return attributeType.equals(attribute.attributeType);
-        } else {
-            return attribute.attributeType == null;
-        }
+        return attributeType.equals(attribute.attributeType);
+
     }
 
     @Override
     public int hashCode() {
-        return attributeType != null ? attributeType.hashCode() : 0;
+        return attributeType.hashCode();
     }
 }
+

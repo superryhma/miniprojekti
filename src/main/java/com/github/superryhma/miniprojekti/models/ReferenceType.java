@@ -8,6 +8,9 @@ public class ReferenceType {
     private final Set<String> optionalAttributes;
 
     public ReferenceType(String name, Set<String> requiredAttributes, Set<String> optionalAttributes) {
+        if(name == null || requiredAttributes == null || optionalAttributes == null) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
         this.name = name;
         this.requiredAttributes = requiredAttributes;
         this.optionalAttributes = optionalAttributes;
@@ -40,12 +43,12 @@ public class ReferenceType {
 
         ReferenceType that = (ReferenceType) o;
 
-        return !(name != null ? !name.equals(that.name) : that.name != null);
+        return name.equals(that.name);
 
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return name.hashCode();
     }
 }
